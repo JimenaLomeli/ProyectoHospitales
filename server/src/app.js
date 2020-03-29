@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
@@ -12,12 +12,12 @@ app.use(cors())
 //////
 // Ejemplo de un endpoint.
 //////
-
-app.get('/pagina_ejemplo', (req, res) => {
-    res.send({
-        message: 'hello world'
-    })
-})
 */
+
+app.post('/register', (req, res) => {
+  res.send({
+    message: `${req.body.name}, ya te registraste campeon`
+  })
+})
 
 app.listen(process.env.PORT || 8081)
