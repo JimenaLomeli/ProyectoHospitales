@@ -14,6 +14,12 @@ ITerm2: https://www.iterm2.com/ (Mac Only)
 
 Git: https://git-scm.com/
 
+### Para que jale con firebase.
+Firebase > Configuracion del Proyecto > Cuentas de Servicio > Generar nueva clave privada.
+
+Eso despues lo ponen en server/src 
+Y en el gitignore
+
 ### Client - Terminal A
 ```
 cd client
