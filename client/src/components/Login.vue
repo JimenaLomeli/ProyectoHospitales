@@ -13,7 +13,7 @@
     placeholder="password"/>
     <br>
     <br>
-    <button @click="login">Login</button>
+    <button @click="loginUser">Login</button>
   </div>
 </template>
 
@@ -30,7 +30,7 @@ export default {
     }
   },
   methods: {
-    async login (){
+    async loginUser (){
        const response = await AuthenticationService.login({
         email: this.email,
         password: this.password
