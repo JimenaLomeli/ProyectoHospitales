@@ -13,8 +13,9 @@ app.use(cors())
 // Despues vemos
 
 var admin = require("firebase-admin");
+const functions = require('firebase-functions');
 
-var serviceAccount = require("./proyectohospitales-f1287-firebase-adminsdk-r36by-29ba8608e2.json");
+var serviceAccount = require("./proyectohospitales-f1287-firebase-adminsdk-r36by-9f4ad8af6e.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -22,7 +23,22 @@ admin.initializeApp({
 });
 
 let db = admin.firestore();
+var firebase = require('firebase');
 
+require("firebase/auth");
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDjRm8k61OoGoFpAyBVlXQTW6Kxjtl4aJk",
+  authDomain: "proyectohospitales-f1287.firebaseapp.com",
+  databaseURL: "https://proyectohospitales-f1287.firebaseio.com",
+  projectId: "proyectohospitales-f1287",
+  storageBucket: "proyectohospitales-f1287.appspot.com",
+  messagingSenderId: "328211933291",
+  appId: "1:328211933291:web:0cb0cfb81f1e0f7f42e92e",
+  measurementId: "G-SRF4QQZRSR"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 /*
 //////
 // Ejemplo de un endpoint.
@@ -35,7 +51,7 @@ app.post('/register', (req, res) => {
   var statusCode = 0
 
   // Agregamos un documento.
-  usersTable.add({
+  usersTable.auth().createUser({
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
@@ -47,9 +63,23 @@ app.post('/register', (req, res) => {
       statusCode = err
   })
 
-  res.send({
-    statusCode: statusCode,
-    message: `${req.body.name}, ya te registraste campeon`
+})
+
+app.post('/login', (req, res) => {
+
+    const promise = firebase.auth().signInWithEmailAndPassword(req.body.email, req.body.password)
+    .catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    if (errorCode === 'auth/wrong-password') {
+    console.log('Wrong password.');
+    } else {
+    console.log(errorMessage);
+    }
+    promise.then(function(data) {
+    console.log(error);
+    });
   })
 })
 
