@@ -15,7 +15,7 @@ app.use(cors())
 var admin = require("firebase-admin");
 const functions = require('firebase-functions');
 
-var serviceAccount = require("./proyectohospitales-f1287-firebase-adminsdk-r36by-9f4ad8af6e.json");
+var serviceAccount = require("./proyectohospitales-f1287-firebase-adminsdk-r36by-d91eeb5b92.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
