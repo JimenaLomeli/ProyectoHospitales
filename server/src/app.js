@@ -51,16 +51,22 @@ app.post('/register', (req, res) => {
   var statusCode = 0
 
   // Agregamos un documento.
-  usersTable.auth().createUser({
+  admin.auth().createUser({
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
     is_active: true,
     date_joined: Date.now()
   }).then((status) => {
-      statusCode = status
+      res.send({
+        status: status,
+        statusCode: 200,
+      })
   }).catch((err) => {
-      statusCode = err
+    res.send({
+      message: err,
+      statusCode: 400,
+    })
   })
 
 })
