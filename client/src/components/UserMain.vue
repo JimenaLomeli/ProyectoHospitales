@@ -1,10 +1,13 @@
 <template>
+<div>
     <v-app-bar height = "50%" color = "#sfd188" dense>  
-        <v-btn  color="none">Ver resultados</v-btn>
+        <v-btn  to="/usermain/examenes">Ver resultados</v-btn>
         <v-btn  >Directorio de Doctores</v-btn>
         <v-btn >Guardados</v-btn>
         <v-btn >Mi cuenta</v-btn>
     </v-app-bar>
+    <router-view></router-view>
+</div>
 </template>
 
 <script>
