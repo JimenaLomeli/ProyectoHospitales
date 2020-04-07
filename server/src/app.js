@@ -13,7 +13,6 @@ app.use(cors())
 // Despues vemos
 
 var admin = require("firebase-admin");
-const functions = require('firebase-functions');
 
 var serviceAccount = require("./proyectohospitales-f1287-firebase-adminsdk-r36by-9f4ad8af6e.json");
 
@@ -37,11 +36,13 @@ const firebaseConfig = {
   appId: "1:328211933291:web:0cb0cfb81f1e0f7f42e92e",
   measurementId: "G-SRF4QQZRSR"
 };
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+
 /*
 //////
-// Ejemplo de un endpoint.
+// Endpoints
 //////
 */
 
@@ -50,7 +51,7 @@ app.post('/register', (req, res) => {
   let usersTable = db.collection('usuarios')
   var statusCode = 0
 
-  // Agregamos un documento.
+  // Crear usuario.
   admin.auth().createUser({
     name: req.body.name,
     email: req.body.email,
@@ -71,6 +72,7 @@ app.post('/register', (req, res) => {
 
 })
 
+// Login Endpoint
 app.post('/login', (req, res) => {
 
     const promise = firebase.auth().signInWithEmailAndPassword(req.body.email, req.body.password)
@@ -87,6 +89,41 @@ app.post('/login', (req, res) => {
     console.log(error);
     });
   })
+})
+
+//Get Exams
+app.get('/exams', (req, res) => {
+  var ref = db.collection('examen_paciente')
+
+  // TO DO: cambiar a que recibamos el id del paciente.
+  ref.where("paciente", "==", "9H44szqWQLPahniix3xn11KYDS82").get()
+  .then(snapshot => {
+    var examenes  = [];
+
+    if (snapshot.empty) {
+      console.log('No matching documents.');
+      return;
+    }  
+
+    snapshot.forEach((exam) => {
+      console.log(exam.data());
+
+      examenes.push({
+        examen: 1,
+        inicio: exam.data().inicio_tratamiento,
+        final: exam.data().fin_tratamiento,
+        comentario: exam.data().comentarios,
+        archivo: exam.data().archivo
+      });
+    });
+
+    res.send({
+      data: examenes
+    })
+  })
+  .catch(err => {
+    console.log('Error getting documents', err);
+  });
 })
 
 app.get('/pacientes', (req, res) => {
