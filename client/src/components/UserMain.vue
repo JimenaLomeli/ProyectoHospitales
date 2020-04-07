@@ -4,7 +4,7 @@
         <v-spacer></v-spacer>
         <v-btn text large to="/usermain/examenes">Ver resultados</v-btn>
         <v-btn text large to="/usermain/hospitales">Directorio de Hospitales</v-btn>
-        <v-btn text large >Directorio de Doctores</v-btn>
+        <v-btn text large to="/usermain/doctores">Directorio de Doctores</v-btn>
         <v-btn text large >Guardados</v-btn>
         <v-btn text large >Mi cuenta</v-btn>
         <v-btn  @click="logoutUser" outlined>Cerrar Sesión</v-btn>

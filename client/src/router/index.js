@@ -5,6 +5,7 @@ import Register from '@/components/Register'
 import Login from '@/components/Login'
 import UserMain from '@/components/UserMain'
 import ExamTable from '@/components/ExamTable'
+import DoctorsTable from '@/components/DoctorsTable'
 
 
 Vue.use(Router)
@@ -36,7 +37,11 @@ export default new Router({
           // when /user/:id/profile is matched
           path: 'examenes',
           component: ExamTable
-        }
+        },
+        { path: 'doctores', component: DoctorsTable }
+        
+        // ...other sub routes
+
       ]
     }
   ]

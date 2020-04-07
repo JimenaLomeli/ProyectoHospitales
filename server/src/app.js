@@ -141,6 +141,40 @@ app.get('/exams', (req, res) => {
   });
 })
 
+//Get Doctores
+app.get('/doctores', (req, res) => {
+  var ref = db.collection('medicos')
+  //var hospref = db.collection('hospital')
+
+  ref.get()
+  .then( snapshot => {
+    var doctores  = [];
+    if (snapshot.empty) {
+      console.log('No se encontraron doctores registrados');
+      return;
+    }  
+
+    snapshot.forEach((doctor) => {
+      console.log(doctor.data());
+
+      doctores.push({
+        nombre: doctor.data().name,
+        apellido: doctor.data().apellido1,
+        telefono: doctor.data().celular,
+        email: doctor.data().email
+      });
+
+    });
+
+    res.send({
+      data: doctores
+    })
+  })
+  .catch(err => {
+    console.log('Error getting doctors', err);
+  });
+})
+
 app.get('/pacientes', (req, res) => {
   res.send({
     message: `${req.body.name}, ya te registraste campeon`
