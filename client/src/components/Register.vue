@@ -76,6 +76,11 @@ export default {
         password: this.password
       })
       
+      
+      if (response.data["statusCode"] == 200) {
+        this.$router.push("/usermain")
+      }
+
       console.log(response.data)
 
     }

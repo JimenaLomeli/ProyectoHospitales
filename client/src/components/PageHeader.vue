@@ -1,8 +1,10 @@
 <template>
     <v-toolbar dense fixed>
         <v-toolbar-side-icon>
-            <v-img :src="require('../assets/cirrus-logo.png')" height="50px"
-    width="50%" contain></v-img>
+            <router-link to="/">
+                <v-img :src="require('../assets/cirrus-logo.png')" height="50px"
+                     width="50%" contain></v-img>
+            </router-link>
         </v-toolbar-side-icon>   
       <v-spacer></v-spacer>
     </v-toolbar>
