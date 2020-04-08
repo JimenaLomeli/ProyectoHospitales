@@ -76,12 +76,16 @@ app.post('/register', (req, res) => {
 app.post('/login', (req, res) => {
 
     const promise = firebase.auth().signInWithEmailAndPassword(req.body.email, req.body.password)
-    .catch(function(error) {
+    .then((status) => {
+      res.send({
+        status: status,
+        statusCode: 200,
+      })
+  }).catch(function(error) {
     // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
     if (errorCode === 'auth/wrong-password') {
-    console.log('Wrong password.');
     } else {
     console.log(errorMessage);
     }
@@ -89,6 +93,17 @@ app.post('/login', (req, res) => {
     console.log(error);
     });
   })
+})
+
+app.post('/', () =>{
+  firebase.auth().signOut().then(function() {
+    // Sign-out successful.
+    console.log('LOGOUT SUCCESSFUL');
+  }).catch(function(error) {
+    // An error happened.
+    console.log(error);
+  });
+
 })
 
 //Get Exams
