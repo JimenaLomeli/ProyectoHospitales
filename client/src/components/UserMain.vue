@@ -38,7 +38,7 @@ h1 {
 .v-app-bar {
     height: 105%;
  }
-  
+
 .v-btn {
   color: none;
 }

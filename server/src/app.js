@@ -14,7 +14,7 @@ app.use(cors())
 
 var admin = require("firebase-admin");
 
-var serviceAccount = require("./proyectohospitales-f1287-firebase-adminsdk-r36by-d91eeb5b92.json");
+var serviceAccount = require("./proyectohospitales-f1287-firebase-adminsdk-r36by-43151ab37a.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -118,7 +118,7 @@ app.get('/exams', (req, res) => {
     if (snapshot.empty) {
       console.log('No matching documents.');
       return;
-    }  
+    }
 
     snapshot.forEach((exam) => {
       console.log(exam.data());
@@ -138,6 +138,33 @@ app.get('/exams', (req, res) => {
   })
   .catch(err => {
     console.log('Error getting documents', err);
+  });
+})
+
+//get Hospitals
+app.get('/hospitals', (req, res) => {
+  var ref = db.collection('hospital')
+  ref.get()
+  .then(snapshot => {
+    var hospitales = [];
+
+    if (snapshot.empty) {
+      console.log("No matching documents");
+      return;
+    }
+    snapshot.forEach((hospital) => {
+      console.log(hospital.data());
+
+      hospitales.push({
+        hospital: hospital.data().name
+      });
+    });
+    res.send({
+      data: hospitales
+    })
+  })
+  .catch(err => {
+    console.log("Error getting hospital documents", err);
   });
 })
 

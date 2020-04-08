@@ -5,6 +5,7 @@ import Register from '@/components/Register'
 import Login from '@/components/Login'
 import UserMain from '@/components/UserMain'
 import ExamTable from '@/components/ExamTable'
+import Hospitales from '@/components/Hospitales'
 
 
 Vue.use(Router)
@@ -36,6 +37,10 @@ export default new Router({
           // when /user/:id/profile is matched
           path: 'examenes',
           component: ExamTable
+        },
+        {
+          path: 'hospitales',
+          component: Hospitales
         }
       ]
     }
