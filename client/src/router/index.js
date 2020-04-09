@@ -5,6 +5,7 @@ import Register from '@/components/Register'
 import Login from '@/components/Login'
 import UserMain from '@/components/UserMain'
 import ExamTable from '@/components/ExamTable'
+import Hospitales from '@/components/Hospitales'
 import DoctorsTable from '@/components/DoctorsTable'
 
 
@@ -38,10 +39,13 @@ export default new Router({
           path: 'examenes',
           component: ExamTable
         },
+        {
+          path: 'hospitales',
+          component: Hospitales
+        }
         { path: 'doctores', component: DoctorsTable }
         
         // ...other sub routes
-
       ]
     }
   ]
