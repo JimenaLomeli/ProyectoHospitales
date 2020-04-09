@@ -42,8 +42,11 @@ export default new Router({
         {
           path: 'hospitales',
           component: Hospitales
-        }
-        { path: 'doctores', component: DoctorsTable }
+        },
+        { 
+          path: 'doctores', 
+          component: DoctorsTable 
+        },
         
         // ...other sub routes
       ]
