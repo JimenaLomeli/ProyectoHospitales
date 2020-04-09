@@ -6,6 +6,7 @@ import Login from '@/components/Login'
 import UserMain from '@/components/UserMain'
 import ExamTable from '@/components/ExamTable'
 import Hospitales from '@/components/Hospitales'
+import DoctorsTable from '@/components/DoctorsTable'
 
 
 Vue.use(Router)
@@ -42,6 +43,9 @@ export default new Router({
           path: 'hospitales',
           component: Hospitales
         }
+        { path: 'doctores', component: DoctorsTable }
+        
+        // ...other sub routes
       ]
     }
   ]
