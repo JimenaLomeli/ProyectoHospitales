@@ -5,6 +5,9 @@ import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
+import VueTextareaAutosize from 'vue-textarea-autosize'
+
+Vue.use(VueTextareaAutosize)
 
 Vue.use(Vuetify)
 

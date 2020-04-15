@@ -168,6 +168,35 @@ app.get('/hospitals', (req, res) => {
      });
 })
 
+//get las citas que estan programadas para el calendario
+app.get('/appointments', (req, res) => {
+  var ref = db.collection('cita_medica')
+  ref.get()
+  .then( snapshot => {
+    var citas = [];
+    if (snapshot.empty) {
+      console.log("No se encontraron citas");
+      return;
+    }
+    snapshot.forEach((cita) => {
+      console.log(cita.data());
+
+      citas.push({
+        observaciones: cita.data().observaciones,
+        fecha_cita: cita.data().fecha_cita
+      });
+
+    });
+
+    res.send({
+      data: citas
+    })
+  })
+  .catch(err => {
+    console.log("Error while getting calendar appointments", err);
+  });
+})
+
 //Get Doctores
 app.get('/doctores', (req, res) => {
   var ref = db.collection('medicos')
@@ -179,7 +208,7 @@ app.get('/doctores', (req, res) => {
     if (snapshot.empty) {
       console.log('No se encontraron doctores registrados');
       return;
-    }  
+    }
 
     snapshot.forEach((doctor) => {
       console.log(doctor.data());

@@ -17,6 +17,7 @@
     "firebase": "^7.13.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
+    "vue-textarea-autosize": "^1.1.1",
     "vuetify": "^2.2.19"
   },
   "devDependencies": {
