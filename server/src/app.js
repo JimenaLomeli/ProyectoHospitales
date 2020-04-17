@@ -26,6 +26,7 @@ var firebase = require('firebase');
 
 require("firebase/auth");
 
+
 const firebaseConfig = {
   apiKey: "AIzaSyDjRm8k61OoGoFpAyBVlXQTW6Kxjtl4aJk",
   authDomain: "proyectohospitales-f1287.firebaseapp.com",
@@ -111,7 +112,7 @@ app.get('/exams', (req, res) => {
   var ref = db.collection('examen_paciente')
 
   // TO DO: cambiar a que recibamos el id del paciente.
-  ref.where("paciente", "==", "9H44szqWQLPahniix3xn11KYDS82").get()
+  ref.where("paciente", "==", "VGO1mAtzRNex1pNeeyvz6ajsQVw2").get()
   .then(snapshot => {
     var examenes  = [];
 
@@ -128,7 +129,8 @@ app.get('/exams', (req, res) => {
         inicio: exam.data().inicio_tratamiento,
         final: exam.data().fin_tratamiento,
         comentario: exam.data().comentarios,
-        archivo: exam.data().archivo
+        favorito: exam.data().favorito,
+        archivo: exam.data().archivo,
       });
     });
 
@@ -138,6 +140,33 @@ app.get('/exams', (req, res) => {
   })
   .catch(err => {
     console.log('Error getting documents', err);
+  });
+})
+
+//Update Exams
+app.put('/exams', (req, res) => {
+  var ref = db.collection('examen_paciente')
+  var statusCode = 0
+
+  // TO DO: cambiar a que recibamos el id del paciente.
+  ref.where("paciente", "==", "VGO1mAtzRNex1pNeeyvz6ajsQVw2")
+  .then(function(){
+    ref.update(
+      { 
+        favorito: req.body.favorito,
+        where : (examen == req.params.examen)
+        
+      }
+    )
+    console.log('Favorito Updated');
+
+    res.send({
+      status: status,
+      statusCode: 200,
+    })
+  })
+  .catch(function(error) {
+    console.log('ERROR');
   });
 })
 

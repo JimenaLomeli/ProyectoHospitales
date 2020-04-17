@@ -4,6 +4,10 @@ export default {
   getExams (credentials) {
     return Api().get('exams', credentials)
   },
+
+  updateExam() {
+    return Api().put('exams')
+  }
   
 }
 
