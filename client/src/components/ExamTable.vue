@@ -45,7 +45,9 @@
     methods: {
         async getExams() {
             const response = await examsService.getExams({
-              
+              headers: {
+                  uid: localStorage.uid,
+              }
             })
 
             console.log(response.data.data);

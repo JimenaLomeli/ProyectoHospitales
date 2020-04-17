@@ -1,8 +1,8 @@
 import Api from '@/services/Api'
 
 export default {
-  getExams (credentials) {
-    return Api().get('exams', credentials)
+  getExams (headers) {
+    return Api().get('exams', headers)
   },
   
 }

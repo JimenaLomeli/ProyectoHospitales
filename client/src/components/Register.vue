@@ -81,8 +81,11 @@ export default {
         this.$router.push("/usermain")
       }
 
-      console.log(response.data)
+      console.log(response.data);
 
+      localStorage.uid = response.data["uid"];
+
+      console.log(localStorage.uid)
     }
   }
 }

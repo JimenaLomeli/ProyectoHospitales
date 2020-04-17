@@ -36,7 +36,9 @@
     methods: {
         async getHospitals() {
             const response = await HospitalService.getHospitals({
-
+              headers: {
+                  uid: localStorage.uid,
+              }
             })
 
             console.log(response.data.data);
