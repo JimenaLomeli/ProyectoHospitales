@@ -6,10 +6,15 @@ import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import VueTextareaAutosize from 'vue-textarea-autosize'
+import '@mdi/font/css/materialdesignicons.css'
 
 Vue.use(VueTextareaAutosize)
 
-Vue.use(Vuetify)
+Vue.use(Vuetify, {
+  icons: {
+    iconfont: 'mdi',
+  },
+})
 
 /* eslint-disable no-new */
 new Vue({
