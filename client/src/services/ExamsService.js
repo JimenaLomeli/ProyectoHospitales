@@ -5,10 +5,16 @@ export default {
     return Api().get('exams', credentials)
   },
 
-  updateExam() {
-    return Api().put('exams')
-  }
-  
+  updateExam(examen_id, favorito) {
+    return Api().put( 'exams',
+      {
+        data: {
+          examen: examen_id,
+          favorito: favorito
+        }
+      }   
+   )
+  }  
 }
 
 // Lo que hace este pedo es que ahora podemos hacer algo

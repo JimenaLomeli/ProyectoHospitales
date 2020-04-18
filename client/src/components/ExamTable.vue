@@ -33,8 +33,9 @@
             <v-list-item-subtitle v-text="exam.archivo" ></v-list-item-subtitle>
             <input 
               type="checkbox"
+              color="#51c791"
               v-model="exam.favorito"
-              v-on:click="updateExam()">   
+              v-on:click="updateExam(exam)">   
           </template>
           </v-list-item>
             <v-divider
@@ -71,6 +72,12 @@
         examenes: [
           
         ],
+        updateExam: async (exam) => {
+          exam.favorito = !exam.favorito
+          const response = await examsService.updateExam(exam.id, exam.favorito);
+          console.log(response.data.data)
+
+        }
       }
     },
     methods: {
@@ -78,20 +85,10 @@
             const response = await examsService.getExams({
               
             })
-
             console.log(response.data.data);
-
             this.examenes = this.examenes.concat(response.data.data);
         }
     },
-     async updateExam() {
-           console.log(exam.favorito)
-           console.log('Favorito Updated');
-           const response = await examsService.updateExam({
-              
-            })
-            console.log(response.data.data);
-      },
 
     created: function() {
       this.getExams();
