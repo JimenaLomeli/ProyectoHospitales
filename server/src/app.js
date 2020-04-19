@@ -60,7 +60,7 @@ app.post('/register', (req, res) => {
     date_joined: Date.now()
   }).then((status) => {
       res.send({
-        status: status,
+        uid: status["uid"],
         statusCode: 200,
       })
   }).catch((err) => {
@@ -110,8 +110,10 @@ app.post('/', () =>{
 app.get('/exams', (req, res) => {
   var ref = db.collection('examen_paciente')
 
-  // TO DO: cambiar a que recibamos el id del paciente.
-  ref.where("paciente", "==", "9H44szqWQLPahniix3xn11KYDS82").get()
+  const uid = req.headers.uid;
+  console.log(uid);
+
+  ref.where("paciente", "==", uid).get()
   .then(snapshot => {
     var examenes  = [];
 
@@ -121,8 +123,6 @@ app.get('/exams', (req, res) => {
     }
 
     snapshot.forEach((exam) => {
-      console.log(exam.data());
-
       examenes.push({
         examen: 1,
         inicio: exam.data().inicio_tratamiento,
@@ -144,28 +144,54 @@ app.get('/exams', (req, res) => {
 //get Hospitals
 app.get('/hospitals', (req, res) => {
   var ref = db.collection('hospital')
-  ref.get()
+
+  // El user id que recibimos del cliente.
+  const uid = req.headers.uid;
+  var hospitales_paciente = []
+
+  // Sacamos todas las citas del paciente y ponemos los hospitales a los que ha
+  // ido en una lista.
+  db.collection('cita_medica').where("exme_paciente_id", "==", uid).get()
   .then(snapshot => {
-    var hospitales = [];
-
-    if (snapshot.empty) {
-      console.log("No matching documents");
-      return;
-    }
-    snapshot.forEach((hospital) => {
-      console.log(hospital.data());
-
-      hospitales.push({
-        hospital: hospital.data().name
+      snapshot.forEach((cita) => {
+        console.log(cita.data().hospital)
+        hospitales_paciente.push(cita.data().hospital);
       });
-    });
-    res.send({
-      data: hospitales
-    })
+
+      console.log(hospitales_paciente.includes('2KNYxVHbsN3OqOo4xf41'));
+
+      // Una vez que tengamos los hospitales ya pedimos su info.
+      // No hay mas info de hospitales (???)
+      ref.get().then(snapshot => {
+        var hospitales = [];
+
+        if (snapshot.empty) {
+          console.log("No matching documents");
+          return;
+        }
+
+        snapshot.forEach((hospital) => {
+          // Si el id existe en la lista de hospitales del paciente, lo agregamos.
+          console.log(hospitales_paciente.includes(hospital.id))
+          if (hospitales_paciente.includes(hospital.id)) {
+            hospitales.push({
+              hospital: hospital.data().name
+            });
+          }
+        });
+
+        res.send({
+          data: hospitales
+        })
+
+      }) 
+      .catch(err => {
+        console.log("Error getting hospital documents", err);
+      });
+  }).catch(err => {
+    console.log("Error getting citas documents", err);
   })
-  .catch(err => {
-    console.log("Error getting hospital documents", err);
-     });
+
 })
 
 //get las citas que estan programadas para el calendario
@@ -200,35 +226,51 @@ app.get('/appointments', (req, res) => {
 //Get Doctores
 app.get('/doctores', (req, res) => {
   var ref = db.collection('medicos')
-  //var hospref = db.collection('hospital')
 
-  ref.get()
-  .then( snapshot => {
-    var doctores  = [];
-    if (snapshot.empty) {
-      console.log('No se encontraron doctores registrados');
-      return;
-    }
+  // El user id que recibimos del cliente.
+  const uid = req.headers.uid;
+  var doctores_paciente = []
 
-    snapshot.forEach((doctor) => {
-      console.log(doctor.data());
-
-      doctores.push({
-        nombre: doctor.data().name,
-        apellido: doctor.data().apellido1,
-        telefono: doctor.data().celular,
-        email: doctor.data().email
+  // Sacamos todas las citas del paciente y ponemos los doctores a los que ha
+  // ido en una lista.
+  db.collection('cita_medica').where("exme_paciente_id", "==", uid).get()
+  .then(snapshot => {
+      snapshot.forEach((cita) => {
+        doctores_paciente.push(cita.data().exme_medico_id);
       });
 
-    });
+      // Una vez que tengamos los doctores ya pedimos su info.
+      ref.get().then(snapshot => {
+        var doctores = [];
 
-    res.send({
-      data: doctores
-    })
+        if (snapshot.empty) {
+          console.log("No matching documents");
+          return;
+        }
+
+        snapshot.forEach((doctor) => {
+          // Si el id existe en la lista de doctores del paciente, lo agregamos.
+          if (doctores_paciente.includes(doctor.id)) {
+            doctores.push({
+              nombre: doctor.data().name,
+              apellido: doctor.data().apellido1,
+              telefono: doctor.data().celular,
+              email: doctor.data().email
+            });
+          }
+        });
+
+        res.send({
+          data: doctores
+        })
+
+      }) 
+      .catch(err => {
+        console.log("Error getting doctors documents", err);
+      });
+  }).catch(err => {
+    console.log("Error getting citas documents", err);
   })
-  .catch(err => {
-    console.log('Error getting doctors', err);
-  });
 })
 
 app.get('/pacientes', (req, res) => {

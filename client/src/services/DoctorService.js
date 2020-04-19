@@ -1,8 +1,8 @@
 import Api from '@/services/Api'
 
 export default {
-  getDoctors () {
-    return Api().get('doctores')
+  getDoctors (credentials) {
+    return Api().get('doctores', credentials)
   },
   
 }

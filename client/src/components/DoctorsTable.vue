@@ -39,6 +39,9 @@
     methods: {
         async getDoctors() {
             const response = await doctorService.getDoctors({
+              headers: {
+                  uid: localStorage.uid,
+              }
             })
             this.doctores = this.doctores.concat(response.data.data);
             console.log(response.data.data);
