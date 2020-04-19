@@ -175,7 +175,8 @@ app.get('/hospitals', (req, res) => {
           console.log(hospitales_paciente.includes(hospital.id))
           if (hospitales_paciente.includes(hospital.id)) {
             hospitales.push({
-              hospital: hospital.data().name
+              hospitalName: hospital.data().name,
+              id: hospital.id
             });
           }
         });
@@ -223,6 +224,29 @@ app.get('/appointments', (req, res) => {
   });
 })
 
+// Cuando creamos una cita y se guarda.
+app.post('/appointments', (req, res) => {
+  // El user id que recibimos del cliente.
+  const uid = req.headers.uid;
+
+  const cita_medica = {
+      created: Date.now(),
+      exme_medico_id: "",
+      exme_paciente_id: req.body.uid,
+      fecha_cita: req.body.appointment.date,
+      hospital: req.body.appointment.hospital,
+      observaciones: req.body.appointment.observaciones
+  }
+  
+  var ref = db.collection('cita_medica').add(cita_medica)
+  .then(ref => {
+    res.send("Cita guardada exitosamente")
+  })
+  .catch(err => {
+    res.send(err)
+  });
+
+})
 //Get Doctores
 app.get('/doctores', (req, res) => {
   var ref = db.collection('medicos')
@@ -254,8 +278,10 @@ app.get('/doctores', (req, res) => {
             doctores.push({
               nombre: doctor.data().name,
               apellido: doctor.data().apellido1,
+              nombreCompleto: "Dr. " + doctor.data().name + " " + doctor.data().apellido1,
               telefono: doctor.data().celular,
-              email: doctor.data().email
+              email: doctor.data().email,
+              id: doctor.id
             });
           }
         });

@@ -13,20 +13,34 @@
           <v-toolbar-title>Nueva Cita</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
-            <v-btn dark text @click="dialog = false">Save</v-btn>
+            <v-btn dark text @click="postAppointment">Guardar</v-btn>
           </v-toolbar-items>
         </v-toolbar>
         <v-list three-line subheader>
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title>Lugar</v-list-item-title>
-              <v-list-item-subtitle>Require password for purchase or use password to restrict purchase</v-list-item-subtitle>
+              <v-col class="d-flex">
+                    <v-select
+                    :items="hospitales"
+                    item-value="id" 
+                    v-model= "hospitalId"
+                    item-text="hospitalName"
+                    label="Hospital"
+                    ></v-select>
+            </v-col>
             </v-list-item-content>
           </v-list-item>
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title>Doctor</v-list-item-title>
-              <v-list-item-subtitle>Require password for purchase or use password to restrict purchase</v-list-item-subtitle>
+              <v-col class="d-flex">
+                    <v-select
+                    :items="doctores"
+                    item-value="id" 
+                    v-model= "doctorId"
+                    item-text="nombreCompleto"
+                    label="Doctor"
+                    ></v-select>
+               </v-col>
             </v-list-item-content>
           </v-list-item>
           <v-list-item>
@@ -48,6 +62,7 @@
             <v-list-item-content>
               <v-textarea
                 label="Comentarios"
+                v-model="comentarios"
                 auto-grow
                 outlined
                 rows="3"
@@ -62,6 +77,11 @@
 </template>
 
 <script>
+  import doctorService from '@/services/DoctorService'
+  import HospitalService from '@/services/HospitalService'
+  import CalendarService from '@/services/CalendarService';
+
+
   export default {
     data () {
       return {
@@ -70,8 +90,62 @@
         sound: true,
         widgets: false,
         picker: new Date().toISOString().substr(0, 10),
+        hospitales: [],
+        doctores: [],
+        comentarios: "",
+        doctorId: "",
+        hospitalId: "",
       }
     },
+    methods: {
+        // Sacamos los doctores para el dropdown list
+        async getDoctors() {
+            const response = await doctorService.getDoctors({
+              headers: {
+                  uid: localStorage.uid,
+              }
+            })
+            this.doctores = this.doctores.concat(response.data.data);
+            console.log(response.data.data);
+
+        },
+        // Sacamos los hospitales para el dropdown list
+        async getHospitals() {
+            const response = await HospitalService.getHospitals({
+              headers: {
+                  uid: localStorage.uid,
+              }
+            })
+
+            console.log(response.data.data);
+
+            this.hospitales = this.hospitales.concat(response.data.data);
+        },
+        // Funcion que registra cita en base de datos.
+        async postAppointment() {
+            var appointmentObject = {
+                hospital: this.hospitalId,
+                doctor: this.doctorId,
+                date: this.picker,
+                observaciones: this.comentarios
+            }
+
+            var body = {
+                appointment: appointmentObject,
+                uid: localStorage.uid
+            }
+
+            const response = await CalendarService.postAppointment(body)
+            
+            // TODO: Alerta
+
+            this.dialog = false
+        }
+    },
+    created: function() {
+      this.getDoctors();
+      this.getHospitals();
+    }
   }
 </script>
 
