@@ -40,7 +40,9 @@
                 <v-list-item-title>4 days</v-list-item-title>
               </v-list-item>
             </v-list>
+
           </v-menu>
+          <appointment></appointment>
         </v-toolbar>
       </v-sheet>
       <v-sheet height="600">
@@ -106,6 +108,8 @@
 
 <script>
   import calendarService from '@/services/CalendarService';
+  import Appointment from './dialogs/Appointment'
+
   export default {
    //  data(){
    //    return{
@@ -128,6 +132,7 @@
    //       dialog: false
    //   }
    // },
+    components: { Appointment },
     data: () => ({
       today: new Date().toISOString().substr(0, 10),
       focus: new Date().toISOString().substr(0, 10),
