@@ -111,7 +111,7 @@ app.post('/', () =>{
 app.get('/exams', (req, res) => {
   var ref = db.collection('examen_paciente')
 
-  const uid = req.headers.uid;
+  const uid = "VGO1mAtzRNex1pNeeyvz6ajsQVw2";
   console.log(uid);
 
   ref.where("paciente", "==", uid).get()
@@ -166,6 +166,48 @@ app.put('/exams', (req, res) => {
   .catch(function(error) {
     console.log(error);
     console.log('ERROR')
+  });
+})
+
+//Get Favoritos
+app.get('/guardados', (req, res) => {
+  var ref = db.collection('examen_paciente')
+
+  const uid = "VGO1mAtzRNex1pNeeyvz6ajsQVw2";
+  console.log(uid);
+
+  ref.where("paciente", "==", uid).get()
+  .then(snapshot => {
+    var examenes  = [];
+
+    if (snapshot.empty) {
+      console.log('No matching documents.');
+      return;
+    }
+
+    snapshot.forEach((exam) => {
+      if(exam.data().favorito == true) {
+        examenes.push({
+          id: exam.id,
+          examen: exam.data().examen,
+          inicio: exam.data().inicio_tratamiento,
+          final: exam.data().fin_tratamiento,
+          comentario: exam.data().comentarios,
+          favorito: exam.data().favorito,
+          archivo: exam.data().archivo,
+        });
+
+      }
+
+
+    });
+
+    res.send({
+      data: examenes
+    })
+  })
+  .catch(err => {
+    console.log('Error getting documents', err);
   });
 })
 
