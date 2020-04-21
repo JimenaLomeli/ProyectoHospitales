@@ -185,7 +185,7 @@ app.get('/hospitals', (req, res) => {
           data: hospitales
         })
 
-      }) 
+      })
       .catch(err => {
         console.log("Error getting hospital documents", err);
       });
@@ -198,6 +198,48 @@ app.get('/hospitals', (req, res) => {
 //get las citas que estan programadas para el calendario
 app.get('/appointments', (req, res) => {
   var ref = db.collection('cita_medica')
+
+//   const uid = req.headers.uid;
+//   var citas_paciente = []
+//
+//   db.collection('cita_medica').where("exme_paciente_id", "==", uid).get()
+//     .then(snapshot => {
+//       snapshot.forEach((cita) => {
+//         console.log(cita.data().exme_citamedica_id)
+//         citas_paciente.push(cita.data().exme_citamedica_id);
+//       });
+//
+//       ref.get().then(snapshot => {
+//         var citas = [];
+//
+//         if (snapshot.empty) {
+//           console.log("No matching documents for appointments");
+//           return;
+//         }
+//
+//         snapshot.forEach((appointment) =>{
+//           console.log(citas_paciente.includes(appointment.id))
+//           if (appointment.includes(appointment.id)) {
+//             citas.push({
+//               fecha_cita: appointment.data().fecha_cita,
+//               observaciones: appointment.data().observaciones
+//             });
+//           }
+//         });
+//
+//         res.send({
+//           data: citas
+//         })
+//
+//       })
+//       .catch(err => {
+//         console.log("Error while getting patient appointments", err)
+//       });
+//     }).catch(err => {
+//       console.log("Error getting appointments");
+//     })
+// })
+
   ref.get()
   .then( snapshot => {
     var citas = [];
@@ -209,8 +251,9 @@ app.get('/appointments', (req, res) => {
       console.log(cita.data());
 
       citas.push({
-        observaciones: cita.data().observaciones,
-        fecha_cita: cita.data().fecha_cita
+        name: cita.data().name,
+        start: cita.data().fecha_cita,
+        details: cita.data().observaciones
       });
 
     });
@@ -237,7 +280,7 @@ app.post('/appointments', (req, res) => {
       hospital: req.body.appointment.hospital,
       observaciones: req.body.appointment.observaciones
   }
-  
+
   var ref = db.collection('cita_medica').add(cita_medica)
   .then(ref => {
     res.send("Cita guardada exitosamente")
@@ -290,7 +333,7 @@ app.get('/doctores', (req, res) => {
           data: doctores
         })
 
-      }) 
+      })
       .catch(err => {
         console.log("Error getting doctors documents", err);
       });
