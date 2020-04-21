@@ -21,8 +21,7 @@
 
   <template>
     <v-list  
-      :headers="headers" 
-      :search="search"  
+
       v-for="(exam, index) in examenes">
         <v-list-item>
           <template>
@@ -33,7 +32,7 @@
             <v-list-item-subtitle v-text="exam.archivo" ></v-list-item-subtitle>
             <input 
               type="checkbox"
-              color="#51c791"
+              color="orange"
               v-model="exam.favorito"
               v-on:click="updateExam(exam)">   
           </template>
