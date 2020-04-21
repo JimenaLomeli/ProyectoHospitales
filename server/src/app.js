@@ -111,7 +111,7 @@ app.post('/', () =>{
 app.get('/exams', (req, res) => {
   var ref = db.collection('examen_paciente')
 
-  const uid = "VGO1mAtzRNex1pNeeyvz6ajsQVw2";
+  const uid = req.headers.uid;
   console.log(uid);
 
   ref.where("paciente", "==", uid).get()
@@ -173,7 +173,7 @@ app.put('/exams', (req, res) => {
 app.get('/guardados', (req, res) => {
   var ref = db.collection('examen_paciente')
 
-  const uid = "VGO1mAtzRNex1pNeeyvz6ajsQVw2";
+  const uid = req.headers.uid;
   console.log(uid);
 
   ref.where("paciente", "==", uid).get()
