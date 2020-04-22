@@ -76,9 +76,9 @@ app.post('/register', (req, res) => {
 app.post('/login', (req, res) => {
 
     const promise = firebase.auth().signInWithEmailAndPassword(req.body.email, req.body.password)
-    .then((status) => {
+    .then((user) => {
       res.send({
-        status: status,
+        uid: user.user.uid,
         statusCode: 200,
       })
   }).catch(function(error) {
@@ -199,72 +199,38 @@ app.get('/hospitals', (req, res) => {
 app.get('/appointments', (req, res) => {
   var ref = db.collection('cita_medica')
 
-//   const uid = req.headers.uid;
-//   var citas_paciente = []
-//
-//   db.collection('cita_medica').where("exme_paciente_id", "==", uid).get()
-//     .then(snapshot => {
-//       snapshot.forEach((cita) => {
-//         console.log(cita.data().exme_citamedica_id)
-//         citas_paciente.push(cita.data().exme_citamedica_id);
-//       });
-//
-//       ref.get().then(snapshot => {
-//         var citas = [];
-//
-//         if (snapshot.empty) {
-//           console.log("No matching documents for appointments");
-//           return;
-//         }
-//
-//         snapshot.forEach((appointment) =>{
-//           console.log(citas_paciente.includes(appointment.id))
-//           if (appointment.includes(appointment.id)) {
-//             citas.push({
-//               fecha_cita: appointment.data().fecha_cita,
-//               observaciones: appointment.data().observaciones
-//             });
-//           }
-//         });
-//
-//         res.send({
-//           data: citas
-//         })
-//
-//       })
-//       .catch(err => {
-//         console.log("Error while getting patient appointments", err)
-//       });
-//     }).catch(err => {
-//       console.log("Error getting appointments");
-//     })
-// })
+  const uid = req.headers.uid;
+  // var currentUser = firebase.auth().currentUser;
+  // console.log("el USER");
+  // console.log(currentUser)
+  console.log("el UID");
+  console.log(uid);
+  console.log("holaaaaa");
 
-  ref.get()
-  .then( snapshot => {
+  ref.where("exme_paciente_id", "==", uid).get()
+  .then(snapshot => {
     var citas = [];
+
     if (snapshot.empty) {
-      console.log("No se encontraron citas");
+      console.log("no matching appointments");
       return;
     }
-    snapshot.forEach((cita) => {
-      console.log(cita.data());
 
+    snapshot.forEach((cita) => {
       citas.push({
         name: cita.data().name,
         start: cita.data().fecha_cita,
         details: cita.data().observaciones
       });
-
     });
 
     res.send({
-      data: citas
+      data:citas
     })
   })
   .catch(err => {
-    console.log("Error while getting calendar appointments", err);
-  });
+    console.log("Error getting appointments", err);
+  })
 })
 
 // Cuando creamos una cita y se guarda.

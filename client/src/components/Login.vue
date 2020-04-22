@@ -56,6 +56,7 @@ export default {
       if (response.data["statusCode"] == 200) {
         this.$router.push("/usermain")
       }
+      localStorage.uid = response.data["uid"];
       console.log(response.data)
 
     }

@@ -1,8 +1,8 @@
 import Api from '@/services/Api'
 
 export default {
-  getCalendarAppointments () {
-    return Api().get('appointments')
+  getCalendarAppointments (credentials) {
+    return Api().get('appointments', credentials)
   },
 
   postAppointment (credentials) {

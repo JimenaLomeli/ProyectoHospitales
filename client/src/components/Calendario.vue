@@ -53,6 +53,7 @@
           :events="citas"
           :now="today"
           :type="type"
+          :headers="headers"
           @click:event="showEvent"
           @click:more="viewDay"
           @click:date="viewDay"
@@ -130,7 +131,7 @@
       citas: [],
       dialog: false
     }),
-    mounted() {
+    created: function(){
       this.getCalendarAppointments();
     },
     computed: {
@@ -167,7 +168,12 @@
     methods: {
      async getCalendarAppointments() {
       const response = await calendarService.getCalendarAppointments({
-      })
+        headers: {
+            uid: localStorage.uid,
+        }
+      });
+      console.log(localStorage.uid);
+      console.log("UID");
       this.citas = response.data.data;
       console.log("Holaa");
       console.log(this.citas);
@@ -210,6 +216,6 @@
       : ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'][d % 10]
     }
 
-    }
+  }
   }
 </script>
