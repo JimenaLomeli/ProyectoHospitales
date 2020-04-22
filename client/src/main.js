@@ -7,6 +7,9 @@ import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import VueTextareaAutosize from 'vue-textarea-autosize'
 import '@mdi/font/css/materialdesignicons.css'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
+import colors from 'vuetify/lib/util/colors'
+
 
 Vue.use(VueTextareaAutosize)
 
@@ -23,4 +26,8 @@ new Vue({
   router,
   components: { App },
   template: '<App/>'
+})
+
+Vue.use(Vuetify, {
+  iconfont: 'md'
 })

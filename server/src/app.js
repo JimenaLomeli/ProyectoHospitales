@@ -26,6 +26,7 @@ var firebase = require('firebase');
 
 require("firebase/auth");
 
+
 const firebaseConfig = {
   apiKey: "AIzaSyDjRm8k61OoGoFpAyBVlXQTW6Kxjtl4aJk",
   authDomain: "proyectohospitales-f1287.firebaseapp.com",
@@ -124,12 +125,81 @@ app.get('/exams', (req, res) => {
 
     snapshot.forEach((exam) => {
       examenes.push({
-        examen: 1,
+        id: exam.id,
+        examen: exam.data().examen,
         inicio: exam.data().inicio_tratamiento,
         final: exam.data().fin_tratamiento,
         comentario: exam.data().comentarios,
-        archivo: exam.data().archivo
+        favorito: exam.data().favorito,
+        archivo: exam.data().archivo,
       });
+    });
+
+    res.send({
+      data: examenes
+    })
+  })
+  .catch(err => {
+    console.log('Error getting documents', err);
+  });
+})
+
+//Update Exams
+app.put('/exams', (req, res) => {
+  var ref = db.collection('examen_paciente')
+  var statusCode = 0
+
+  let exam_id = req.body.data.examen
+  // TO DO: cambiar a que recibamos el id del paciente.
+  ref.doc(exam_id).update({ 
+    favorito: req.body.data.favorito,
+
+  })
+  .then(function(){
+      console.log('Favorito Updated');
+
+      res.send({
+        status: 'Updated Correctly',
+        statusCode: 200,
+      })
+  })
+  .catch(function(error) {
+    console.log(error);
+    console.log('ERROR')
+  });
+})
+
+//Get Favoritos
+app.get('/guardados', (req, res) => {
+  var ref = db.collection('examen_paciente')
+
+  const uid = req.headers.uid;
+  console.log(uid);
+
+  ref.where("paciente", "==", uid).get()
+  .then(snapshot => {
+    var examenes  = [];
+
+    if (snapshot.empty) {
+      console.log('No matching documents.');
+      return;
+    }
+
+    snapshot.forEach((exam) => {
+      if(exam.data().favorito == true) {
+        examenes.push({
+          id: exam.id,
+          examen: exam.data().examen,
+          inicio: exam.data().inicio_tratamiento,
+          final: exam.data().fin_tratamiento,
+          comentario: exam.data().comentarios,
+          favorito: exam.data().favorito,
+          archivo: exam.data().archivo,
+        });
+
+      }
+
+
     });
 
     res.send({
