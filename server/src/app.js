@@ -77,9 +77,9 @@ app.post('/register', (req, res) => {
 app.post('/login', (req, res) => {
 
     const promise = firebase.auth().signInWithEmailAndPassword(req.body.email, req.body.password)
-    .then((status) => {
+    .then((user) => {
       res.send({
-        status: status,
+        uid: user.user.uid,
         statusCode: 200,
       })
   }).catch(function(error) {
@@ -245,7 +245,8 @@ app.get('/hospitals', (req, res) => {
           console.log(hospitales_paciente.includes(hospital.id))
           if (hospitales_paciente.includes(hospital.id)) {
             hospitales.push({
-              hospital: hospital.data().name
+              hospitalName: hospital.data().name,
+              id: hospital.id
             });
           }
         });
@@ -254,7 +255,7 @@ app.get('/hospitals', (req, res) => {
           data: hospitales
         })
 
-      }) 
+      })
       .catch(err => {
         console.log("Error getting hospital documents", err);
       });
@@ -264,6 +265,67 @@ app.get('/hospitals', (req, res) => {
 
 })
 
+//get las citas que estan programadas para el calendario
+app.get('/appointments', (req, res) => {
+  var ref = db.collection('cita_medica')
+
+  const uid = req.headers.uid;
+  // var currentUser = firebase.auth().currentUser;
+  // console.log("el USER");
+  // console.log(currentUser)
+  console.log("el UID");
+  console.log(uid);
+  console.log("holaaaaa");
+
+  ref.where("exme_paciente_id", "==", uid).get()
+  .then(snapshot => {
+    var citas = [];
+
+    if (snapshot.empty) {
+      console.log("no matching appointments");
+      return;
+    }
+
+    snapshot.forEach((cita) => {
+      citas.push({
+        name: cita.data().name,
+        start: cita.data().fecha_cita,
+        details: cita.data().observaciones
+      });
+    });
+
+    res.send({
+      data:citas
+    })
+  })
+  .catch(err => {
+    console.log("Error getting appointments", err);
+  })
+})
+
+// Cuando creamos una cita y se guarda.
+app.post('/appointments', (req, res) => {
+  // El user id que recibimos del cliente.
+  const uid = req.headers.uid;
+
+  const cita_medica = {
+      created: Date.now(),
+      exme_medico_id: "",
+      exme_paciente_id: req.body.uid,
+      fecha_cita: req.body.appointment.date,
+      hospital: req.body.appointment.hospital,
+      observaciones: req.body.appointment.observaciones
+  }
+
+  var ref = db.collection('cita_medica').add(cita_medica)
+  .then(ref => {
+    res.send("Cita guardada exitosamente")
+  })
+  .catch(err => {
+    res.send(err)
+  });
+
+})
 //Get Doctores
 app.get('/doctores', (req, res) => {
   var ref = db.collection('medicos')
@@ -295,8 +357,10 @@ app.get('/doctores', (req, res) => {
             doctores.push({
               nombre: doctor.data().name,
               apellido: doctor.data().apellido1,
+              nombreCompleto: "Dr. " + doctor.data().name + " " + doctor.data().apellido1,
               telefono: doctor.data().celular,
-              email: doctor.data().email
+              email: doctor.data().email,
+              id: doctor.id
             });
           }
         });
@@ -305,7 +369,7 @@ app.get('/doctores', (req, res) => {
           data: doctores
         })
 
-      }) 
+      })
       .catch(err => {
         console.log("Error getting doctors documents", err);
       });

@@ -2,6 +2,7 @@
 <div >
     <v-app-bar height = "50%" color = "#sfd188" dense>
         <v-spacer></v-spacer>
+        <v-btn text large to="/usermain/calendario">Calendario</v-btn>
         <v-btn text large to="/usermain/examenes">Ver resultados</v-btn>
         <v-btn text large to="/usermain/hospitales">Directorio de Hospitales</v-btn>
         <v-btn text large to="/usermain/doctores">Directorio de Doctores</v-btn>
