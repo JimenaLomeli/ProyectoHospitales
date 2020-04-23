@@ -28,13 +28,12 @@
         headers: [
           { text: 'Hospital', value: 'hospital' }
         ],
-        hospitales: [
-
-        ],
+        hospitales: [],
       }
     },
     methods: {
         async getHospitals() {
+
             const response = await HospitalService.getHospitals({
               headers: {
                   uid: localStorage.uid,
@@ -42,7 +41,6 @@
             })
 
             console.log(response.data.data);
-
             this.hospitales = this.hospitales.concat(response.data.data);
         }
     },
