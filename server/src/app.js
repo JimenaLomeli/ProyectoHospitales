@@ -151,7 +151,7 @@ app.put('/exams', (req, res) => {
 
   let exam_id = req.body.data.examen
   // TO DO: cambiar a que recibamos el id del paciente.
-  ref.doc(exam_id).update({ 
+  ref.doc(exam_id).update({
     favorito: req.body.data.favorito,
 
   })
@@ -245,7 +245,7 @@ app.get('/hospitals', (req, res) => {
           console.log(hospitales_paciente.includes(hospital.id))
           if (hospitales_paciente.includes(hospital.id)) {
             hospitales.push({
-              hospitalName: hospital.data().name,
+              hospital: hospital.data().name,
               id: hospital.id
             });
           }
