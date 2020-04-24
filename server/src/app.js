@@ -127,8 +127,8 @@ app.get('/exams', (req, res) => {
       examenes.push({
         id: exam.id,
         examen: exam.data().examen,
-        inicio: exam.data().inicio_tratamiento,
-        final: exam.data().fin_tratamiento,
+        inicio: exam.data().inicio_tratamiento.toDate(),
+        final: exam.data().fin_tratamiento.toDate(),
         comentario: exam.data().comentarios,
         favorito: exam.data().favorito,
         archivo: exam.data().archivo,
@@ -190,8 +190,8 @@ app.get('/guardados', (req, res) => {
         examenes.push({
           id: exam.id,
           examen: exam.data().examen,
-          inicio: exam.data().inicio_tratamiento,
-          final: exam.data().fin_tratamiento,
+          inicio: exam.data().inicio_tratamiento.toDate(),
+          final: exam.data().fin_tratamiento.toDate(),
           comentario: exam.data().comentarios,
           favorito: exam.data().favorito,
           archivo: exam.data().archivo,
