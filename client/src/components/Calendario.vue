@@ -42,7 +42,7 @@
             </v-list>
 
           </v-menu>
-          <appointment></appointment>
+          <appointmentDialog></appointmentDialog>
         </v-toolbar>
       </v-sheet>
       <v-sheet height="600">
@@ -105,10 +105,10 @@
 
 <script>
   import calendarService from '@/services/CalendarService';
-  import Appointment from './dialogs/Appointment'
+  import AppointmentDialog from './dialogs/AppointmentDialog'
 
   export default {
-    components: { Appointment },
+    components: { AppointmentDialog },
     data: () => ({
       today: new Date().toISOString().substr(0, 10),
       focus: new Date().toISOString().substr(0, 10),

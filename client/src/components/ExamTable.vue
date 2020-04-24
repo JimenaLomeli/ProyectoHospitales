@@ -1,11 +1,5 @@
-
-<head>
-  <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
-  <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
-</head>
-
 <template>
+<v-app style = "background: #00cd9b;">
   <v-card>
     <v-card-title>
       Examenes
@@ -20,40 +14,45 @@
     </v-card-title>
 
   <template>
-    <v-list  
-
-      v-for="(exam, index) in examenes">
-        <v-list-item>
-          <template>
-            <v-list-item-subtitle v-text="exam.examen"></v-list-item-subtitle>
-            <v-list-item-subtitle v-text="exam.inicio"></v-list-item-subtitle>
-            <v-list-item-subtitle v-text="exam.final"></v-list-item-subtitle>
-            <v-list-item-subtitle v-text="exam.comentario"></v-list-item-subtitle>
-            <v-list-item-subtitle v-text="exam.archivo" ></v-list-item-subtitle>
-            <input 
-              type="checkbox"
-              color="orange"
-              v-model="exam.favorito"
-              v-on:click="updateExam(exam)">   
-          </template>
-          </v-list-item>
-            <v-divider
-              v-if="index + 1 < examenes.length"
-              :key="index"
-            ></v-divider>
-     </v-list >
+    <v-data-table
+      :headers="headers"
+      :items="examenes"
+      :search="search"
+    >
+      <template v-slot:item="row">
+          <tr>
+            <td>{{row.item.examen}}</td>
+            <td>{{row.item.inicio.substring(0,10)}}</td>
+            <td>{{row.item.final.substring(0,10)}}</td>
+            <td>{{row.item.comentario}}</td>
+            <td>
+              <fileDialog v-if="row.item.archivo !== emptyString && row.item.archivo !== undefined" 
+              :base64File = "row.item.archivo"></fileDialog> 
+            </td>
+            <td> 
+              <v-icon  v-if="row.item.favorito" color = "yellow" @click="updateExam(row.item)">mdi-star</v-icon>
+              <v-icon  v-else @click="updateExam(row.item)">mdi-star</v-icon>
+            </td>
+          </tr>
+      </template>
+    
+    </v-data-table>
    </template> 
   </v-card>
+</v-app>
 </template>
 
 <script>
   import examsService from '@/services/ExamsService'
+  import FileDialog from './dialogs/FileDialog'
 
 
   export default {
+    components: { FileDialog },
     data () {
       return {
         singleSelect: false,
+        emptyString: "",
         selected: [],
         headers: [
           {
@@ -72,6 +71,7 @@
           
         ],
         updateExam: async (exam) => {
+          console.log("LALAALALAL");
           exam.favorito = !exam.favorito
           const response = await examsService.updateExam(exam.id, exam.favorito);
           console.log(response.data.data)
@@ -105,6 +105,7 @@ h2 {
   align-self: center;
   margin: 10px;
 }
+
 
 .v-card {
     margin-top: 15px;
