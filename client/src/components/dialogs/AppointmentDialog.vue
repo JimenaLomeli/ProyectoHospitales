@@ -20,11 +20,21 @@
           <v-list-item>
             <v-list-item-content>
               <v-col class="d-flex">
+                    <v-text-field
+                    v-model= "name"
+                    label="Nombre"
+                    ></v-text-field>
+            </v-col>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-content>
+              <v-col class="d-flex">
                     <v-select
                     :items="hospitales"
                     item-value="id" 
                     v-model= "hospitalId"
-                    item-text="hospitalName"
+                    item-text="hospital"
                     label="Hospital"
                     ></v-select>
             </v-col>
@@ -124,6 +134,7 @@
         // Funcion que registra cita en base de datos.
         async postAppointment() {
             var appointmentObject = {
+                name: this.name,
                 hospital: this.hospitalId,
                 doctor: this.doctorId,
                 date: this.picker,

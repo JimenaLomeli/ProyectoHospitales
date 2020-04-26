@@ -309,6 +309,7 @@ app.post('/appointments', (req, res) => {
   const uid = req.headers.uid;
 
   const cita_medica = {
+      name: req.body.appointment.name,
       created: Date.now(),
       exme_medico_id: "",
       exme_paciente_id: req.body.uid,
