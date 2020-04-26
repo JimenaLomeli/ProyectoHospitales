@@ -50,10 +50,9 @@
           ref="calendar"
           v-model="focus"
           color="primary"
-          :events="citas"
+          :events="events"
           :now="today"
           :type="type"
-          :headers="headers"
           @click:event="showEvent"
           @click:more="viewDay"
           @click:date="viewDay"
@@ -128,7 +127,7 @@
       selectedEvent: {},
       selectedElement: null,
       selectedOpen: false,
-      citas: [],
+      events: [],
       dialog: false
     }),
     created: function(){
@@ -167,17 +166,22 @@
   },
     methods: {
      async getCalendarAppointments() {
+
       const response = await calendarService.getCalendarAppointments({
         headers: {
             uid: localStorage.uid,
         }
       });
-      console.log(localStorage.uid);
-      console.log("UID");
-      this.citas = response.data.data;
-      console.log("Holaa");
-      console.log(this.citas);
-      console.log(response.data.data);
+
+      this.events = response.data.data
+
+      //Vuetify nos pide que tengamos (name, start) para que se pueda ver el event
+      this.events.forEach(function (event) {
+          if(!event.hasAttribute("name")) {
+            event.name = " ";
+          }
+      })
+      console.log(this.events);
     },
     viewDay ({ date }) {
      this.focus = date
