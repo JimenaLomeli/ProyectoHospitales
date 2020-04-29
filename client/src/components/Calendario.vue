@@ -73,26 +73,56 @@
               :color="selectedEvent.color"
               dark
             >
-              <v-btn icon>
-                <v-icon>mdi-pencil</v-icon>
+              <v-btn @click="deleteEvent()" icon>
+                <v-icon>mdi-delete</v-icon>
               </v-btn>
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn icon>
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
+
             </v-toolbar>
             <v-card-text>
               <span v-html="selectedEvent.details"></span>
             </v-card-text>
             <v-card-actions>
-              <v-btn
-                text
-                color="secondary"
-                @click="selectedOpen = false"
-              >
-                Cancel
+              <v-btn text color="secondary" @click="selectedOpen = false">
+                Cerrar
               </v-btn>
+
+                <v-dialog v-model="dialog" persistent max-width="600px">
+                  <template v-slot:activator="{ on }">
+                    <v-btn text color="secondary" dark v-on="on">Editar</v-btn>
+                  </template>
+                  <v-card>
+                    <v-card-title>
+                      <span class="headline">Actualizar Cita</span>
+                    </v-card-title>
+                    <v-card-text>
+                      <v-container>
+                        <v-row>
+                          <v-col cols="12" sm="6" md="4">
+                            <v-text-field
+                            v-model = "fecha_cita"
+                            label="Nueva fecha (YYYY-MM-DD)*" required></v-text-field>
+                          </v-col>
+
+                          <v-col cols="12">
+                            <v-text-field
+                            v-model = "observaciones"
+                            label="Comentarios"></v-text-field>
+                          </v-col>
+
+                        </v-row>
+                      </v-container>
+                      <small>*Campo obligatorio</small>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="blue darken-1" text @click="dialog = false">Cerrar</v-btn>
+                      <v-btn color="blue darken-1" text @click="updateAppointment()">Guardar</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+
             </v-card-actions>
           </v-card>
         </v-menu>
@@ -104,7 +134,7 @@
 
 <script>
   import calendarService from '@/services/CalendarService';
-  import AppointmentDialog from './dialogs/AppointmentDialog'
+  import AppointmentDialog from './dialogs/AppointmentDialog';
 
   export default {
     components: { AppointmentDialog },
@@ -128,7 +158,11 @@
       selectedElement: null,
       selectedOpen: false,
       events: [],
-      dialog: false
+      dialog: false,
+
+      fecha_cita: new Date().toISOString().substr(0, 10),
+      observaciones: null,
+      nombre_cita: null
     }),
     created: function(){
       this.getCalendarAppointments();
@@ -183,6 +217,24 @@
       })
       console.log(this.events);
     },
+    async updateAppointment(){
+      var appointmentObject = {
+        date: this.fecha_cita,
+        observaciones: this.observaciones,
+        nombre_cita: this.selectedEvent.name
+      }
+
+      var body = {
+        appointment: appointmentObject,
+        uid: localStorage.uid
+      }
+      console.log(this.events)
+      console.log(this.selectedEvent.name)
+      console.log("jelouu")
+      console.log(body)
+      const response = await calendarService.updateAppointment(body)
+      this.dialog = false
+    },
     viewDay ({ date }) {
      this.focus = date
      this.type = 'day'
@@ -195,6 +247,11 @@
     },
     next () {
       this.$refs.calendar.next()
+    },
+    deleteEvent() {
+      //TO DO -> funcion para eliminar una cita
+      console.log("cita:");
+      console.log(this.selectedEvent.name);
     },
     showEvent ({ nativeEvent, event }) {
       const open = () => {
