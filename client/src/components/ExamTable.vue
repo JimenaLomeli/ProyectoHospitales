@@ -65,7 +65,7 @@
           { text: 'Fecha Final', value: 'final' },
           { text: 'Comentarios', value: 'comentario' },
           { text: 'Archivo', value: 'archivo' },
-          { text: 'Marcar Favorito', value: 'favorito' },
+          { text: 'Marcar Guardado', value: 'favorito' },
         ],
         examenes: [
           

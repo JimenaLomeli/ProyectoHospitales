@@ -2,12 +2,24 @@
 <div >
     <v-app-bar height = "50%" color = "#sfd188" dense>
         <v-spacer></v-spacer>
-        <v-btn text large to="/usermain/calendario">Calendario</v-btn>
-        <v-btn text large to="/usermain/examenes">Ver resultados</v-btn>
-        <v-btn text large to="/usermain/hospitales">Directorio de Hospitales</v-btn>
-        <v-btn text large to="/usermain/doctores">Directorio de Doctores</v-btn>
-        <v-btn text large to="/usermain/guardados">Guardados</v-btn>
-        <v-btn text large >Mi cuenta</v-btn>
+        <v-btn text large to="/usermain/calendario">Calendario
+          <v-icon dark right>mdi-calendar-month</v-icon>
+        </v-btn>
+        <v-btn text large to="/usermain/examenes">Ver resultados
+            <v-icon dark right>mdi-animation-outline</v-icon>
+        </v-btn>
+        <v-btn text large to="/usermain/hospitales">Directorio de Hospitales
+            <v-icon dark right>mdi-hospital-marker</v-icon>
+        </v-btn>
+        <v-btn text large to="/usermain/doctores">Directorio de Doctores
+            <v-icon dark right>mdi-doctor</v-icon>
+        </v-btn>
+        <v-btn text large to="/usermain/guardados">Guardados
+            <v-icon dark right>mdi-bookmark-multiple-outline</v-icon>
+        </v-btn>
+        <v-btn text large >Mi cuenta
+          <v-icon dark right>mdi-account-circle-outline</v-icon>
+        </v-btn>
         <v-btn  @click="logoutUser" outlined>Cerrar Sesión</v-btn>
     </v-app-bar>
     <router-view></router-view>
