@@ -51,6 +51,7 @@
     components: { FileDialog },
     data () {
       return {
+        search: '',
         singleSelect: false,
         emptyString: "",
         selected: [],

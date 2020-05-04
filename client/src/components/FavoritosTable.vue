@@ -43,6 +43,7 @@
     components: { FileDialog },
     data () {
       return {
+        search: '',
         headers: [
           {
             text: 'Examen',

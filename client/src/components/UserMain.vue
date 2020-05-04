@@ -17,9 +17,6 @@
         <v-btn text large to="/usermain/guardados">Guardados
             <v-icon dark right>mdi-bookmark-multiple-outline</v-icon>
         </v-btn>
-        <v-btn text large >Mi cuenta
-          <v-icon dark right>mdi-account-circle-outline</v-icon>
-        </v-btn>
         <v-btn  @click="logoutUser" outlined>Cerrar Sesión</v-btn>
     </v-app-bar>
     <router-view></router-view>
