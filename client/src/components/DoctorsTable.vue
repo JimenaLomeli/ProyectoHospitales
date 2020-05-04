@@ -25,6 +25,7 @@
   export default {
     data () {
       return {
+        search: '',
         headers: [
           { text: 'Nombre', value: 'nombre' },
           { text: 'Apellido', value: 'apellido' },
