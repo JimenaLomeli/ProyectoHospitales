@@ -270,9 +270,6 @@ app.get('/appointments', (req, res) => {
   var ref = db.collection('cita_medica')
 
   const uid = req.headers.uid;
-  // var currentUser = firebase.auth().currentUser;
-  // console.log("el USER");
-  // console.log(currentUser)
   console.log("el UID");
   console.log(uid);
   console.log("holaaaaa");
@@ -307,6 +304,7 @@ app.get('/appointments', (req, res) => {
 app.post('/appointments', (req, res) => {
   // El user id que recibimos del cliente.
   const uid = req.headers.uid;
+  console.log("aber", uid)
 
   const cita_medica = {
       name: req.body.appointment.name,
@@ -327,6 +325,45 @@ app.post('/appointments', (req, res) => {
   });
 
 })
+
+
+//actualizar la cita
+app.put('/appointments', (req, res) =>{
+  const uid = req.body.uid;
+
+  console.log("olaaa")
+  console.log(req.body.appointment.date)
+  console.log(req.body.appointment.observaciones)
+  console.log(req.body.appointment.nombre_cita)
+
+  const cita_actualizada = {
+    fecha_cita: req.body.appointment.date,
+    observaciones: req.body.appointment.observaciones
+  }
+
+  //primero sacamos la cita del paciente que queremos actualizar
+  //no se si este bien checarlo con el nombre, lo checamoss, asi funciona
+  db.collection('cita_medica').where("exme_paciente_id", "==", uid).where("name", "==", req.body.appointment.nombre_cita)
+  .get()
+  .then(
+    function(querySnapshot) {
+    querySnapshot.forEach(function(doc){
+      console.log(doc.id, " => ",doc.data());
+      db.collection('cita_medica').doc(doc.id).update(cita_actualizada)
+    })
+    res.send("Cita actualizada exitosamente")
+  })
+  .catch(err => {
+    console.log("Error actualizando cita", err)
+  })
+})
+
+//TO DO --> eliminar cita
+// app.delete('/appointments', (req, res) => {
+
+  // });
+// })
+
 //Get Doctores
 app.get('/doctores', (req, res) => {
   var ref = db.collection('medicos')
