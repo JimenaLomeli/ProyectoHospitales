@@ -73,7 +73,7 @@
               :color="selectedEvent.color"
               dark
             >
-              <v-btn @click="deleteEvent()" icon>
+              <v-btn @click="deleteAppointment()" icon>
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
@@ -235,6 +235,25 @@
       const response = await calendarService.updateAppointment(body)
       this.dialog = false
     },
+
+    async deleteAppointment() {
+      //TO DO -> funcion para eliminar una cita
+      console.log("cita:");
+      console.log(this.selectedEvent.name);
+      console.log("id")
+      console.log(localStorage.uid)
+
+      // var appointmentObject = {nombre_cita: }
+
+      var body = {
+        headers: {
+            uid: localStorage.uid,
+            appointment: this.selectedEvent.name
+        }
+      }
+
+      const response = await calendarService.deleteAppointment(body)
+    },
     viewDay ({ date }) {
      this.focus = date
      this.type = 'day'
@@ -247,11 +266,6 @@
     },
     next () {
       this.$refs.calendar.next()
-    },
-    deleteEvent() {
-      //TO DO -> funcion para eliminar una cita
-      console.log("cita:");
-      console.log(this.selectedEvent.name);
     },
     showEvent ({ nativeEvent, event }) {
       const open = () => {
