@@ -358,11 +358,31 @@ app.put('/appointments', (req, res) =>{
   })
 })
 
-//TO DO --> eliminar cita
-// app.delete('/appointments', (req, res) => {
 
-  // });
-// })
+//eliminar una cita
+app.delete('/appointments', (req, res) =>{
+  const uid = req.headers.uid
+  // const uid = req.body.uid;
+  console.log("oliii", uid)
+  console.log(req.headers.appointment)
+
+
+  //primero sacamos el paciente y la cita que se quiere eliminar
+  db.collection('cita_medica').where("exme_paciente_id", "==", uid).where("name", "==", req.headers.appointment)
+  .get()
+  .then(
+    function(querySnapshot) {
+      querySnapshot.forEach(function(doc){
+        console.log(doc.id, " => ",doc.data());
+        db.collection('cita_medica').doc(doc.id).delete()
+      })
+      res.send("Cita eliminada exitosamente")
+    })
+    .catch(err => {
+      console.log("Error eliminando cita", err)
+    })
+})
+
 
 //Get Doctores
 app.get('/doctores', (req, res) => {
