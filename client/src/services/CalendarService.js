@@ -13,8 +13,8 @@ export default {
     return Api().put('appointments', credentials)
   },
 
-  // deleteAppointment (credentials) {
-  //   return Api().delete('appointments', credentials)
-  // },
+  deleteAppointment (credentials) {
+    return Api().delete('appointments', credentials)
+  },
 
 }
