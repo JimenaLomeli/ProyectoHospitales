@@ -8,10 +8,27 @@ app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors())
 
+var fs = require('fs');
+
+// function to encode file data to base64 encoded string
+function base64_encode(file) {
+    // read binary data
+    var bitmap = fs.readFileSync(file);
+    // convert binary data to base64 encoded string
+    return "data:image/jpeg;base64," + new Buffer(bitmap).toString('base64');
+}
+
 // Firebase integration.
 // Seguro hay una mejor manera de hacerlo, poniendolo en otro archivo o algo.
 // Despues vemos
-
+function randomDate(){
+  var startDate = new Date(2020,5,1).getTime();
+  var endDate =  new Date(2020,7,1).getTime();
+  var spaces = (endDate - startDate);
+  var timestamp = Math.round(Math.random() * spaces);
+  timestamp += startDate;
+  return new Date(timestamp);
+}
 var admin = require("firebase-admin");
 
 var serviceAccount = require("./proyectohospitales-f1287-firebase-adminsdk-r36by-9f4ad8af6e.json");
@@ -286,7 +303,7 @@ app.get('/appointments', (req, res) => {
     snapshot.forEach((cita) => {
       citas.push({
         name: cita.data().name,
-        start: cita.data().fecha_cita,
+        start: cita.data().fecha_cita.toDate().toISOString().substring(0, 10),
         details: cita.data().observaciones
       });
     });
@@ -326,8 +343,68 @@ app.post('/appointments', (req, res) => {
 
 })
 
+const hospitales = ["2KNYxVHbsN3OqOo4xf41", "XeI2SnWPFbyE7ITdNXDB", "i4V4lsJ4i0Ca4qNQcIXa",
+"LoRd57B1EbnCT9D6h6CB"]
+const baseFile = base64_encode("./src/template.jpg")
+function fillAllUsers(nextPageToken) {
+  // List batch of users, 1000 at a time.
+  admin.auth().listUsers(100, nextPageToken)
+    .then(function(listUsersResult) {
+      listUsersResult.users.forEach(function(userRecord) {
+        console.log('user', userRecord.uid);
+        //Agregamos 10 citas al usuario
+        for(var i = 0; i < 10; i++) {
+          const cita_medica = {
+            name: "Colonoscopia",
+            created: Date.now(),
+            exme_medico_id: Math.floor(Math.random() * 49) + 1 ,
+            exme_paciente_id: userRecord.uid,
+            fecha_cita: randomDate(),
+            hospital: hospitales[Math.floor(Math.random() * 4)],
+            observaciones: "Todo se ve bien"
+          }
 
-//actualizar la cita
+          db.collection('cita_medica').add(cita_medica)
+          .then(ref => {
+            console.log("Cita guardada exitosamente")
+            const examen = {
+              archivo: baseFile,
+              cita_medica: ref.id,
+              comentarios: "Administrar supositorio diario" ,
+              examen: "Supositorio 23",
+              favorito: false,
+              fin_tratamiento: randomDate(),
+              inicio_tratamiento: randomDate(),
+              paciente: userRecord.uid
+            }
+
+            db.collection('examen_paciente').add(examen)
+          })
+          .catch(err => {
+            console.log(err)
+          });
+        }
+        return;
+      });
+      if (listUsersResult.pageToken) {
+        // List next batch of users.
+        fillAllUsers(listUsersResult.pageToken);
+      }
+    })
+    .catch(function(error) {
+      console.log('Error listing users:', error);
+    });
+}
+
+app.post('/fill_bd', (req, res) => {
+  fillAllUsers();
+
+  res.status(200)
+  res.message = "Ok"
+  return res.end();
+})
+
+//actualizar la citare
 app.put('/appointments', (req, res) =>{
   const uid = req.body.uid;
 

@@ -206,7 +206,7 @@
             uid: localStorage.uid,
         }
       });
-
+      console.log(response.data.data);
       this.events = response.data.data
 
       //Vuetify nos pide que tengamos (name, start) para que se pueda ver el event
@@ -214,6 +214,7 @@
           if(!event.hasAttribute("name")) {
             event.name = " ";
           }
+
       })
       console.log(this.events);
     },
