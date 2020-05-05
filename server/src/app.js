@@ -286,7 +286,7 @@ app.get('/appointments', (req, res) => {
     snapshot.forEach((cita) => {
       citas.push({
         name: cita.data().name,
-        start: cita.data().fecha_cita,
+        start: cita.data().fecha_cita.toISOString().substring(0, 10),
         details: cita.data().observaciones
       });
     });
