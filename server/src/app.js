@@ -286,7 +286,7 @@ app.get('/appointments', (req, res) => {
     snapshot.forEach((cita) => {
       citas.push({
         name: cita.data().name,
-        start: cita.data().fecha_cita.toISOString().substring(0, 10),
+        start: cita.data().fecha_cita.toDate().toISOString().substring(0, 10),
         details: cita.data().observaciones
       });
     });
@@ -306,12 +306,15 @@ app.post('/appointments', (req, res) => {
   const uid = req.headers.uid;
   console.log("aber", uid)
 
+  console.log(req.body.appointment.date, typeof(req.body.appointment.date))
+  console.log(req.body.appointment.date, new Date(req.body.appointment.date))
+
   const cita_medica = {
       name: req.body.appointment.name,
       created: Date.now(),
       exme_medico_id: "",
       exme_paciente_id: req.body.uid,
-      fecha_cita: req.body.appointment.date,
+      fecha_cita: new Date(req.body.appointment.date),
       hospital: req.body.appointment.hospital,
       observaciones: req.body.appointment.observaciones
   }
@@ -397,7 +400,7 @@ app.get('/doctores', (req, res) => {
   db.collection('cita_medica').where("exme_paciente_id", "==", uid).get()
   .then(snapshot => {
       snapshot.forEach((cita) => {
-        doctores_paciente.push(cita.data().exme_medico_id);
+        doctores_paciente.push(String(cita.data().exme_medico_id));
       });
 
       // Una vez que tengamos los doctores ya pedimos su info.
@@ -410,6 +413,7 @@ app.get('/doctores', (req, res) => {
         }
 
         snapshot.forEach((doctor) => {
+          console.log(typeof(doctor.id))
           // Si el id existe en la lista de doctores del paciente, lo agregamos.
           if (doctores_paciente.includes(doctor.id)) {
             doctores.push({
@@ -423,6 +427,7 @@ app.get('/doctores', (req, res) => {
           }
         });
 
+        console.log(doctores)
         res.send({
           data: doctores
         })
