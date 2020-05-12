@@ -165,7 +165,10 @@
       nombre_cita: null
     }),
     created: function(){
-      this.getCalendarAppointments();
+      // Para no tener que hacer el GET mas veces.
+      if (this.events.length == 0){
+        this.getCalendarAppointments();
+      }
     },
     computed: {
     title () {
@@ -215,10 +218,10 @@
             event.name = " ";
           }
       })
-      console.log(this.events);
     },
     async updateAppointment(){
       var appointmentObject = {
+        id: this.selectedEvent.id,
         date: this.fecha_cita,
         observaciones: this.observaciones,
         nombre_cita: this.selectedEvent.name
@@ -228,21 +231,15 @@
         appointment: appointmentObject,
         uid: localStorage.uid
       }
-      console.log(this.events)
-      console.log(this.selectedEvent.name)
-      console.log("jelouu")
-      console.log(body)
+
       const response = await calendarService.updateAppointment(body)
       this.dialog = false
+      //Esto se hace para que las citas se actualicen.
+      this.getCalendarAppointments();
     },
 
     async deleteAppointment() {
       //TO DO -> funcion para eliminar una cita
-      console.log("cita:");
-      console.log(this.selectedEvent.name);
-      console.log("id")
-      console.log(localStorage.uid)
-
       // var appointmentObject = {nombre_cita: }
 
       var body = {
@@ -269,6 +266,7 @@
     },
     showEvent ({ nativeEvent, event }) {
       const open = () => {
+        console.log(event);
         this.selectedEvent = event
         this.selectedElement = nativeEvent.target
         setTimeout(() => this.selectedOpen = true, 10)
