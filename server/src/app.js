@@ -285,6 +285,7 @@ app.get('/appointments', (req, res) => {
 
     snapshot.forEach((cita) => {
       citas.push({
+        id: cita.id,
         name: cita.data().name,
         start: cita.data().fecha_cita.toDate().toISOString().substring(0, 10),
         details: cita.data().observaciones
@@ -332,33 +333,23 @@ app.post('/appointments', (req, res) => {
 
 //actualizar la cita
 app.put('/appointments', (req, res) =>{
-  const uid = req.body.uid;
-
-  console.log("olaaa")
-  console.log(req.body.appointment.date)
-  console.log(req.body.appointment.observaciones)
-  console.log(req.body.appointment.nombre_cita)
+  const appointment_id = req.body.appointment.id;
 
   const cita_actualizada = {
-    fecha_cita: req.body.appointment.date,
+    fecha_cita: new Date(req.body.appointment.date),
     observaciones: req.body.appointment.observaciones
   }
 
-  //primero sacamos la cita del paciente que queremos actualizar
-  //no se si este bien checarlo con el nombre, lo checamoss, asi funciona
-  db.collection('cita_medica').where("exme_paciente_id", "==", uid).where("name", "==", req.body.appointment.nombre_cita)
-  .get()
-  .then(
-    function(querySnapshot) {
-    querySnapshot.forEach(function(doc){
-      console.log(doc.id, " => ",doc.data());
-      db.collection('cita_medica').doc(doc.id).update(cita_actualizada)
-    })
-    res.send("Cita actualizada exitosamente")
+  //Hacemos el update a la cita medica :)
+  db.collection('cita_medica').doc(appointment_id)
+  .update(cita_actualizada)
+  .then((response) => {
+      return res.status(200).json(response).end();
   })
-  .catch(err => {
-    console.log("Error actualizando cita", err)
+  .catch((err) => {
+      return res.status(400).end()
   })
+
 })
 
 
