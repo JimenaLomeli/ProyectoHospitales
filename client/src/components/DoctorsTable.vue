@@ -1,4 +1,5 @@
 <template>
+  <v-app>
   <v-card>
     <v-card-title>
       Doctores
@@ -15,8 +16,33 @@
       :headers="headers"
       :items="doctores"
       :search="search"
+      @click:row="showProfile"
     ></v-data-table>
   </v-card>
+  <v-dialog
+      v-model="dialog"
+      max-height = "70%"
+      max-width = "70%"
+
+  >
+    <v-card
+      class="mx-auto"
+      width="100%"
+      height="100%"
+    >
+    <v-row>
+      <v-col width="70%">
+        <v-card-title>Nombre: {{currentDoctorProfile.nombreCompleto}}</v-card-title>
+        <v-card-title>Email: {{currentDoctorProfile.email}}</v-card-title>
+        <v-card-title>Telefono: {{currentDoctorProfile.telefono}}</v-card-title>
+      </v-col>
+      <v-col width="30%">
+        <v-img src="https://upload.wikimedia.org/wikipedia/en/6/62/The_Good_Doctor_2017.png"></v-img>
+      </v-col>
+    </v-row>
+    </v-card>
+  </v-dialog>
+  </v-app>
 </template>
 
 <script>
@@ -26,6 +52,8 @@
     data () {
       return {
         search: '',
+        currentDoctorProfile: {},
+        dialog: false,
         headers: [
           { text: 'Nombre', value: 'nombre' },
           { text: 'Apellido', value: 'apellido' },
@@ -47,6 +75,12 @@
             this.doctores = this.doctores.concat(response.data.data);
             console.log(response.data.data);
 
+        },
+
+        showProfile(value){
+          console.log(value);
+          this.currentDoctorProfile = value;
+          this.dialog = true;
         }
     },
     created: function() {
