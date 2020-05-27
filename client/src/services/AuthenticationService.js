@@ -11,8 +11,15 @@ export default {
 
   logout () {
     return Api().post('/')
-  }
-}
+  },
+  
+//   miCuenta () {
+//     return Api().get('miCuenta')
+    
+//   }
+ }
+
+
 
 // Lo que hace este pedo es que ahora podemos hacer algo
 // como esto

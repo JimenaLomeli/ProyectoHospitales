@@ -53,6 +53,7 @@ export default {
         email: this.email,
         password: this.password
       })
+      localStorage.user = JSON.stringify(response.data)
       if (response.data["statusCode"] == 200) {
         this.$router.push("/usermain")
       }

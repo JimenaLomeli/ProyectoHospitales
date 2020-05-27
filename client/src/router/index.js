@@ -9,6 +9,7 @@ import Hospitales from '@/components/Hospitales'
 import DoctorsTable from '@/components/DoctorsTable'
 import Calendario from '@/components/Calendario'
 import FavoritosTable from '@/components/FavoritosTable'
+import MiCuentaTable from '@/components/MiCuentaTable'
 
 
 
@@ -58,7 +59,10 @@ export default new Router({
           path: 'guardados', 
           component: FavoritosTable 
         },
-        
+        { 
+          path: 'miCuenta', 
+          component: MiCuentaTable 
+        },       
         // ...other sub routes
       ]
     }

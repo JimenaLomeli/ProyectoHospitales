@@ -21,6 +21,10 @@
             <v-icon dark right>mdi-bookmark-multiple-outline</v-icon>
         </v-btn>
         <v-spacer></v-spacer>
+        <v-btn class="button1" text large to="/usermain/miCuenta">Mi Cuenta
+            <v-icon dark right>mdi-account-circle-outline</v-icon>
+        </v-btn>
+        <v-spacer></v-spacer>
         <v-btn class="button2" @click="logoutUser" outlined>Cerrar Sesión</v-btn>
     </v-app-bar>
     <router-view></router-view>
