@@ -86,7 +86,10 @@ app.post('/login', (req, res) => {
     // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
-    if (errorCode === 'auth/wrong-password') {
+    if (errorCode === 'auth/wrong-password' || errorCode === 'auth/user-not-found') {
+      res.send({
+        statusCode: 400,
+      })
     } else {
     console.log(errorMessage);
     }
