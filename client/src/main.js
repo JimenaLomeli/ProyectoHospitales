@@ -13,15 +13,9 @@ import colors from 'vuetify/lib/util/colors'
 
 import * as VueGoogleMaps from 'vue2-google-maps'
 
-var apiKey = {
-  VUE_APP_MY_VARIABLE: process.env.VUE_APP_MY_VARIABLE
-}
-
-console.log(apiKey)
-
 Vue.use(VueGoogleMaps, {
   load: {
-    key: apiKey.VUE_APP_MY_VARIABLE,
+    key: process.env.VUE_APP_MY_VARIABLE,
   },
   installComponents: false
 })
