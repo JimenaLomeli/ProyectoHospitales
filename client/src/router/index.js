@@ -7,6 +7,9 @@ import UserMain from '@/components/UserMain'
 import ExamTable from '@/components/ExamTable'
 import Hospitales from '@/components/Hospitales'
 import DoctorsTable from '@/components/DoctorsTable'
+import Calendario from '@/components/Calendario'
+import FavoritosTable from '@/components/FavoritosTable'
+
 
 
 Vue.use(Router)
@@ -43,9 +46,17 @@ export default new Router({
           path: 'hospitales',
           component: Hospitales
         },
+        {
+          path: 'doctores',
+          component: DoctorsTable
+        },
+        {
+          path: 'calendario',
+          component: Calendario
+        },
         { 
-          path: 'doctores', 
-          component: DoctorsTable 
+          path: 'guardados', 
+          component: FavoritosTable 
         },
         
         // ...other sub routes
