@@ -6,7 +6,7 @@ const serviceAccount = require('./firebaseConfig')
 
 
 const app = express()
-app.use(morgan('combined'))
+app.use(morgan('combine'))
 app.use(bodyParser.json())
 app.use(cors())
 
