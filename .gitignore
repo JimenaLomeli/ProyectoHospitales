@@ -1,8 +1,7 @@
 client/node_modules/
 server/node_modules/
-server/src/proyectohospitales-f1287-firebase-adminsdk-r36by-9f4ad8af6e.json
 server/src/proyectohospitales-f1287-firebase-adminsdk-r36by-29ba8608e2.json
 server/src/proyectohospitales-f1287-firebase-adminsdk-r36by-43151ab37a.json
-server/src/proyectohospitales-f1287-firebase-adminsdk-r36by-d91eeb5b92.json
+.idea
 
 client/src/api_map_key.json
