@@ -3,48 +3,17 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
 const serviceAccount = require('./firebaseConfig')
+var firebase = require('firebase');
+const admin = require("firebase-admin");
+const auth = require("firebase/auth");
 
 const app = express()
 app.use(morgan('combine'))
 app.use(bodyParser.json())
 
-var corsOptions = {
-  origin: "*",
-}
+app.use(cors())
 
-app.use(cors(corsOptions))
-
-// Firebase integration.
-// Seguro hay una mejor manera de hacerlo, poniendolo en otro archivo o algo.
-// Despues vemos
-
-var admin = require("firebase-admin");
-
-//var serviceAccount = require("./proyectohospitales-f1287-firebase-adminsdk-r36by-9f4ad8af6e.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://proyectohospitales-f1287.firebaseio.com"
-});
-
-let db = admin.firestore();
-var firebase = require('firebase');
-
-require("firebase/auth");
-
-const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: "proyectohospitales-f1287.firebaseapp.com",
-  databaseURL: "https://proyectohospitales-f1287.firebaseio.com",
-  projectId: "proyectohospitales-f1287",
-  storageBucket: "proyectohospitales-f1287.appspot.com",
-  messagingSenderId: "328211933291",
-  appId: "1:328211933291:web:0cb0cfb81f1e0f7f42e92e",
-  measurementId: "G-SRF4QQZRSR"
-};
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+var db;
 
 /*
 //////
@@ -448,4 +417,35 @@ app.get('/pacientes', (req, res) => {
   })
 })
 
-app.listen(process.env.PORT || 8081)
+app.listen(process.env.PORT || 8081, () => {
+  // Firebase integration.
+  new Promise((resolve, reject) => {
+      var serviceAccount = serviceAccount;
+
+      serviceAccount.private_key = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+
+      admin.initializeApp({
+          credential: admin.credential.cert(serviceAccount),
+          databaseURL: "https://web-final-76d71.firebaseio.com"
+      });
+
+      const firebaseConfig = {
+        apiKey: process.env.FIREBASE_API_KEY,
+        authDomain: "proyectohospitales-f1287.firebaseapp.com",
+        databaseURL: "https://proyectohospitales-f1287.firebaseio.com",
+        projectId: "proyectohospitales-f1287",
+        storageBucket: "proyectohospitales-f1287.appspot.com",
+        messagingSenderId: "328211933291",
+        appId: "1:328211933291:web:0cb0cfb81f1e0f7f42e92e",
+        measurementId: "G-SRF4QQZRSR"
+      };
+
+      firebase.initializeApp(firebaseConfig);
+
+      this.db = admin.firestore();
+      console.log("Connected");
+  })
+  .catch( err => {
+      console.log(err);
+  })
+}) 
