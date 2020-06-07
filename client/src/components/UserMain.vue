@@ -34,8 +34,9 @@ import AuthenticationService from '@/services/AuthenticationService'
 export default {
   methods: {
     async logoutUser (){
+      localStorage.clear();
       this.$router.push("/")
-       const response = await AuthenticationService.logout()
+      const response = await AuthenticationService.logout()
     }
   }
 }

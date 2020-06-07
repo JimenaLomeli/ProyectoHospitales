@@ -2,7 +2,7 @@
 <v-app style = "background: #00cd9b;">
   <v-card>
     <v-card-title>
-      Doctores
+      Favoritos
       <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
@@ -16,6 +16,7 @@
       :headers="headers"
       :items="examenes"
       :search="search"
+      loading= true
     >
       <template v-slot:item="row">
           <tr>

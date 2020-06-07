@@ -49,9 +49,6 @@ firebase.initializeApp(firebaseConfig);
 
 app.post('/register', (req, res) => {
   //Creamos la conexion a la tabla 'usuarios'
-  let usersTable = db.collection('usuarios')
-  var statusCode = 0
-
   // Crear usuario.
   admin.auth().createUser({
     name: req.body.name,
@@ -63,12 +60,13 @@ app.post('/register', (req, res) => {
       res.send({
         uid: status["uid"],
         statusCode: 200,
-      })
+      }).end()
   }).catch((err) => {
+    console.log(err);
     res.send({
       message: err,
       statusCode: 400,
-    })
+    }).end()
   })
 
 })
@@ -325,9 +323,11 @@ app.post('/appointments', (req, res) => {
 
   var ref = db.collection('cita_medica').add(cita_medica)
   .then(ref => {
+    res.status(200)
     res.send("Cita guardada exitosamente")
   })
   .catch(err => {
+    res.status(500)
     res.send(err)
   });
 
@@ -402,8 +402,10 @@ app.get('/doctores', (req, res) => {
         var doctores = [];
 
         if (snapshot.empty) {
-          console.log("No matching documents");
-          return;
+          res.message = "No matching documents";
+
+          res.status(205)
+          res.send().end();
         }
 
         snapshot.forEach((doctor) => {

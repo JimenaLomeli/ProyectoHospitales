@@ -18,6 +18,7 @@
       :headers="headers"
       :items="examenes"
       :search="search"
+      loading= true
     >
       <template v-slot:item="row">
           <tr>

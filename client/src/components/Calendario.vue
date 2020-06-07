@@ -42,7 +42,8 @@
             </v-list>
 
           </v-menu>
-          <appointmentDialog></appointmentDialog>
+          <appointmentDialog v-bind:doctores="this.doctores" 
+          v-bind:hospitales="this.hospitales"></appointmentDialog>
         </v-toolbar>
       </v-sheet>
       <v-sheet height="600">
@@ -135,6 +136,8 @@
 <script>
   import calendarService from '@/services/CalendarService';
   import AppointmentDialog from './dialogs/AppointmentDialog';
+  import doctorService from '@/services/DoctorService'
+  import HospitalService from '@/services/HospitalService'
 
   export default {
     components: { AppointmentDialog },
@@ -157,6 +160,8 @@
       selectedEvent: {},
       selectedElement: null,
       selectedOpen: false,
+      doctores: [],
+      hospitales: [],
       events: [],
       dialog: false,
 
@@ -165,10 +170,9 @@
       nombre_cita: null
     }),
     created: function(){
-      // Para no tener que hacer el GET mas veces.
-      if (this.events.length == 0){
-        this.getCalendarAppointments();
-      }
+      this.getCalendarAppointments();
+      this.getDoctors();
+      this.getHospitals();
     },
     computed: {
     title () {
@@ -204,19 +208,14 @@
     methods: {
      async getCalendarAppointments() {
 
-      const response = await calendarService.getCalendarAppointments({
+      calendarService.getCalendarAppointments({
         headers: {
             uid: localStorage.uid,
         }
-      });
-
-      this.events = response.data.data
-
-      //Vuetify nos pide que tengamos (name, start) para que se pueda ver el event
-      this.events.forEach(function (event) {
-          if(!event.hasAttribute("name")) {
-            event.name = " ";
-          }
+      })
+      .then(response => {
+        console.log("A", response.data.data)
+        this.events = response.data.data
       })
     },
     async updateAppointment(){
@@ -232,15 +231,17 @@
         uid: localStorage.uid
       }
 
-      const response = await calendarService.updateAppointment(body)
-      this.dialog = false
+      await calendarService.updateAppointment(body)
+      .then(() => {
+        this.getCalendarAppointments().then(() => {
+          this.dialog = false
+          this.selectedOpen = false
+        })
+      })
       //Esto se hace para que las citas se actualicen.
-      this.getCalendarAppointments();
     },
 
     async deleteAppointment() {
-      //TO DO -> funcion para eliminar una cita
-      // var appointmentObject = {nombre_cita: }
 
       var body = {
         headers: {
@@ -250,6 +251,31 @@
       }
 
       const response = await calendarService.deleteAppointment(body)
+      this.getCalendarAppointments();
+      this.selectedOpen = false
+    },
+    // Sacamos los doctores para el dropdown list
+    async getDoctors() {
+        const response = await doctorService.getDoctors({
+          headers: {
+              uid: localStorage.uid,
+          }
+        })
+        this.doctores = this.doctores.concat(response.data.data);
+        console.log(response.data.data);
+
+    },
+    // Sacamos los hospitales para el dropdown list
+    async getHospitals() {
+        const response = await HospitalService.getHospitals({
+          headers: {
+              uid: localStorage.uid,
+          }
+        })
+
+        console.log(response.data.data);
+
+        this.hospitales = this.hospitales.concat(response.data.data);
     },
     viewDay ({ date }) {
      this.focus = date

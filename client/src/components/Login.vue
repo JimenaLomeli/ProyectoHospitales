@@ -79,7 +79,7 @@ export default {
       })
 
       if (response.data["statusCode"] == 200) {
-        this.$router.push("/usermain")
+        this.$router.push("/usermain/calendario")
         this.error = "200"
       }
       else{
