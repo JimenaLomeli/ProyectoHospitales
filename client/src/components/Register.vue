@@ -74,18 +74,19 @@ export default {
         email: this.email,
         name: this.name,
         password: this.password
+      }).then(resp => {
+        console.log(resp);
+        if(resp.data.statusCode == 200){
+          this.$router.push("/usermain/calendario")
+          localStorage.uid = resp.data["uid"];
+        }else {
+          alert(resp.data.message.message)
+        }
       })
-      
-      
-      if (response.data["statusCode"] == 200) {
-        this.$router.push("/usermain")
-      }
-
-      console.log(response.data);
-
-      localStorage.uid = response.data["uid"];
-
-      console.log(localStorage.uid)
+      .catch(err => {
+        alert(err);
+      })
+    
     }
   }
 }

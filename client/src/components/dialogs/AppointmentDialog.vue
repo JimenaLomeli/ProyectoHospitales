@@ -87,12 +87,10 @@
 </template>
 
 <script>
-  import doctorService from '@/services/DoctorService'
-  import HospitalService from '@/services/HospitalService'
   import CalendarService from '@/services/CalendarService';
 
-
   export default {
+    props: ['doctores', 'hospitales'],
     data () {
       return {
         dialog: false,
@@ -100,37 +98,14 @@
         sound: true,
         widgets: false,
         picker: new Date().toISOString().substr(0, 10),
-        hospitales: [],
-        doctores: [],
         comentarios: "",
         doctorId: "",
         hospitalId: "",
+        names: "",
+        name: "",
       }
     },
     methods: {
-        // Sacamos los doctores para el dropdown list
-        async getDoctors() {
-            const response = await doctorService.getDoctors({
-              headers: {
-                  uid: localStorage.uid,
-              }
-            })
-            this.doctores = this.doctores.concat(response.data.data);
-            console.log(response.data.data);
-
-        },
-        // Sacamos los hospitales para el dropdown list
-        async getHospitals() {
-            const response = await HospitalService.getHospitals({
-              headers: {
-                  uid: localStorage.uid,
-              }
-            })
-
-            console.log(response.data.data);
-
-            this.hospitales = this.hospitales.concat(response.data.data);
-        },
         // Funcion que registra cita en base de datos.
         async postAppointment() {
             var appointmentObject = {
@@ -147,15 +122,17 @@
             }
 
             const response = await CalendarService.postAppointment(body)
+            .then(resp => {
+              if (resp.status == 200) {
+                alert("La cita ha sido guardada exitosamente");
+              }
+            })
+            .catch(err => {
+              alert(err);
+            })
             
-            // TODO: Alerta
-
             this.dialog = false
         }
-    },
-    created: function() {
-      this.getDoctors();
-      this.getHospitals();
     }
   }
 </script>

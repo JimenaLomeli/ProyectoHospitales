@@ -1,5 +1,5 @@
 <template>
-<v-app>
+<v-app style = "background: #00cd9b;">
   <v-card>
     <v-card-title>
       Hospitales
@@ -17,6 +17,7 @@
       :items="hospitales"
       :search="search"
       @click:row="showProfile"
+      loading= true
     ></v-data-table>
   </v-card>
 
