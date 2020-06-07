@@ -4,11 +4,15 @@ const cors = require('cors')
 const morgan = require('morgan')
 const serviceAccount = require('./firebaseConfig')
 
-
 const app = express()
 app.use(morgan('combine'))
 app.use(bodyParser.json())
-app.use(cors())
+
+var corsOptions = {
+  origin: "*",
+}
+
+app.use(cors(corsOptions))
 
 // Firebase integration.
 // Seguro hay una mejor manera de hacerlo, poniendolo en otro archivo o algo.
