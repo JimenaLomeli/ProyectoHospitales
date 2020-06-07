@@ -421,8 +421,6 @@ app.listen(process.env.PORT || 8081, () => {
   console.log(process.env.FIREBASE_API_KEY)
 
   new Promise((resolve, reject) => {
-      var serviceAccount = serviceAccount;
-
       serviceAccount.private_key = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
 
       admin.initializeApp({
