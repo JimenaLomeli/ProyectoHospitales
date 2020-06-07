@@ -13,16 +13,6 @@ app.use(bodyParser.json())
 
 app.use(cors())
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", '*');
-  res.header("Access-Control-Allow-Credentials", true);
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
-  next();
-});
-
-var db;
-
 /*
 //////
 // Endpoints
@@ -92,7 +82,7 @@ app.post('/', () =>{
 
 //Get Exams
 app.get('/exams', (req, res) => {
-  var ref = db.collection('examen_paciente')
+  var ref = this.db.collection('examen_paciente')
 
   const uid = req.headers.uid;
   console.log(uid);
@@ -129,7 +119,7 @@ app.get('/exams', (req, res) => {
 
 //Update Exams
 app.put('/exams', (req, res) => {
-  var ref = db.collection('examen_paciente')
+  var ref = this.db.collection('examen_paciente')
   var statusCode = 0
 
   let exam_id = req.body.data.examen
@@ -154,7 +144,7 @@ app.put('/exams', (req, res) => {
 
 //Get Favoritos
 app.get('/guardados', (req, res) => {
-  var ref = db.collection('examen_paciente')
+  var ref = this.db.collection('examen_paciente')
 
   const uid = req.headers.uid;
   console.log(uid);
@@ -196,7 +186,7 @@ app.get('/guardados', (req, res) => {
 
 //get Hospitals
 app.get('/hospitals', (req, res) => {
-  var ref = db.collection('hospital')
+  var ref = this.db.collection('hospital')
 
   // El user id que recibimos del cliente.
   const uid = req.headers.uid;
@@ -204,7 +194,7 @@ app.get('/hospitals', (req, res) => {
 
   // Sacamos todas las citas del paciente y ponemos los hospitales a los que ha
   // ido en una lista.
-  db.collection('cita_medica').where("exme_paciente_id", "==", uid).get()
+  this.db.collection('cita_medica').where("exme_paciente_id", "==", uid).get()
   .then(snapshot => {
       snapshot.forEach((cita) => {
         console.log(cita.data().hospital)
@@ -250,7 +240,7 @@ app.get('/hospitals', (req, res) => {
 
 //get las citas que estan programadas para el calendario
 app.get('/appointments', (req, res) => {
-  var ref = db.collection('cita_medica')
+  var ref = this.db.collection('cita_medica')
 
   const uid = req.headers.uid;
   console.log("el UID");
@@ -303,7 +293,7 @@ app.post('/appointments', (req, res) => {
       observaciones: req.body.appointment.observaciones
   }
 
-  var ref = db.collection('cita_medica').add(cita_medica)
+  var ref = this.db.collection('cita_medica').add(cita_medica)
   .then(ref => {
     res.status(200)
     res.send("Cita guardada exitosamente")
@@ -326,7 +316,7 @@ app.put('/appointments', (req, res) =>{
   }
 
   //Hacemos el update a la cita medica :)
-  db.collection('cita_medica').doc(appointment_id)
+  this.db.collection('cita_medica').doc(appointment_id)
   .update(cita_actualizada)
   .then((response) => {
       return res.status(200).json(response).end();
@@ -347,13 +337,13 @@ app.delete('/appointments', (req, res) =>{
 
 
   //primero sacamos el paciente y la cita que se quiere eliminar
-  db.collection('cita_medica').where("exme_paciente_id", "==", uid).where("name", "==", req.headers.appointment)
+  this.db.collection('cita_medica').where("exme_paciente_id", "==", uid).where("name", "==", req.headers.appointment)
   .get()
   .then(
     function(querySnapshot) {
       querySnapshot.forEach(function(doc){
         console.log(doc.id, " => ",doc.data());
-        db.collection('cita_medica').doc(doc.id).delete()
+        this.db.collection('cita_medica').doc(doc.id).delete()
       })
       res.send("Cita eliminada exitosamente")
     })
@@ -365,7 +355,7 @@ app.delete('/appointments', (req, res) =>{
 
 //Get Doctores
 app.get('/doctores', (req, res) => {
-  var ref = db.collection('medicos')
+  var ref = this.db.collection('medicos')
 
   // El user id que recibimos del cliente.
   const uid = req.headers.uid;
@@ -373,7 +363,7 @@ app.get('/doctores', (req, res) => {
 
   // Sacamos todas las citas del paciente y ponemos los doctores a los que ha
   // ido en una lista.
-  db.collection('cita_medica').where("exme_paciente_id", "==", uid).get()
+  this.db.collection('cita_medica').where("exme_paciente_id", "==", uid).get()
   .then(snapshot => {
       snapshot.forEach((cita) => {
         doctores_paciente.push(String(cita.data().exme_medico_id));
