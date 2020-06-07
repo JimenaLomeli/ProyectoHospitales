@@ -2,6 +2,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
+const serviceAccount = require('./firebaseConfig')
+
 
 const app = express()
 app.use(morgan('combined'))
@@ -14,7 +16,7 @@ app.use(cors())
 
 var admin = require("firebase-admin");
 
-var serviceAccount = require("./proyectohospitales-f1287-firebase-adminsdk-r36by-9f4ad8af6e.json");
+//var serviceAccount = require("./proyectohospitales-f1287-firebase-adminsdk-r36by-9f4ad8af6e.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -26,9 +28,8 @@ var firebase = require('firebase');
 
 require("firebase/auth");
 
-
 const firebaseConfig = {
-  apiKey: "AIzaSyDjRm8k61OoGoFpAyBVlXQTW6Kxjtl4aJk",
+  apiKey: process.env.FIREBASE_API_KEY,
   authDomain: "proyectohospitales-f1287.firebaseapp.com",
   databaseURL: "https://proyectohospitales-f1287.firebaseio.com",
   projectId: "proyectohospitales-f1287",
