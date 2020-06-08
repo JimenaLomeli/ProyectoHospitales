@@ -341,7 +341,7 @@ app.delete('/appointments', (req, res) =>{
   console.log("oliii", uid)
 
   // Delete appointment
-  this.db.collection("cita_medica").doc(uid).delete.then(function() {
+  this.db.collection("cita_medica").doc(uid).delete().then(function() {
       console.log("Document successfully deleted!");
       res.send("Cita eliminada exitosamente")
     }).catch(function(error) {
