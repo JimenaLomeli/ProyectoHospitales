@@ -336,7 +336,7 @@ app.put('/appointments', (req, res) =>{
 
 //eliminar una cita
 app.delete('/appointments', (req, res) =>{
-  const uid = req.body.headers.uid
+  const uid = req.headers.uid
   // const uid = req.body.uid;
   console.log("oliii", uid)
 
