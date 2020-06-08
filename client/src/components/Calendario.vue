@@ -74,7 +74,7 @@
               :color="selectedEvent.color"
               dark
             >
-              <v-btn @click="deleteAppointment()" icon>
+              <v-btn @click="deleteAppointment(selectedEvent)" icon>
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
               <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
@@ -208,12 +208,13 @@
     methods: {
      async getCalendarAppointments() {
 
-      calendarService.getCalendarAppointments({
+      await calendarService.getCalendarAppointments({
         headers: {
             uid: localStorage.uid,
         }
       })
       .then(response => {
+        console.log(localStorage.uid)
         console.log("A", response.data.data)
         this.events = response.data.data
       })
@@ -241,12 +242,12 @@
       //Esto se hace para que las citas se actualicen.
     },
 
-    async deleteAppointment() {
+    async deleteAppointment(selectedEvent) {
+      console.log("SE", selectedEvent)
 
       var body = {
         headers: {
-            uid: localStorage.uid,
-            appointment: this.selectedEvent.name
+            uid: selectedEvent.id,
         }
       }
 
