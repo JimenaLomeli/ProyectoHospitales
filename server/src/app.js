@@ -1,6 +1,5 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const cors = require('cors')
 const morgan = require('morgan')
 const serviceAccount = require('./firebaseConfig')
 var firebase = require('firebase');
@@ -11,12 +10,17 @@ const app = express()
 app.use(morgan('combine'))
 app.use(bodyParser.json())
 
-var corsOptions = {
-  origin: '*',
-  methods: ["GET", "PUT", "POST", "DELETE", "HEAD", "OPTIONS", "PATCH"] // some legacy browsers (IE11, various SmartTVs) choke on 204
+function cors(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE");
+  if (req.method === "OPTIONS") {
+    return res.send(204);
+  }
+  next();
 }
 
-app.use(cors(corsOptions))
+app.use(cors)
 
 /*
 //////
