@@ -247,7 +247,7 @@ app.get('/hospitals', (req, res) => {
 //get las citas que estan programadas para el calendario
 app.get('/appointments', (req, res) => {
   var ref = this.db.collection('cita_medica')
-
+  console.log(req.headers)
   const uid = req.headers.uid;
   console.log("el UID");
   console.log(uid);
@@ -336,26 +336,17 @@ app.put('/appointments', (req, res) =>{
 
 //eliminar una cita
 app.delete('/appointments', (req, res) =>{
-  const uid = req.headers.uid
+  const uid = req.body.headers.uid
   // const uid = req.body.uid;
   console.log("oliii", uid)
-  console.log(req.headers.appointment)
 
-
-  //primero sacamos el paciente y la cita que se quiere eliminar
-  this.db.collection('cita_medica').where("exme_paciente_id", "==", uid).where("name", "==", req.headers.appointment)
-  .get()
-  .then(
-    function(querySnapshot) {
-      querySnapshot.forEach(function(doc){
-        console.log(doc.id, " => ",doc.data());
-        this.db.collection('cita_medica').doc(doc.id).delete()
-      })
+  // Delete appointment
+  this.db.collection("cita_medica").doc(uid).delete.then(function() {
+      console.log("Document successfully deleted!");
       res.send("Cita eliminada exitosamente")
-    })
-    .catch(err => {
-      console.log("Error eliminando cita", err)
-    })
+    }).catch(function(error) {
+      res.send(error);
+   });
 })
 
 
