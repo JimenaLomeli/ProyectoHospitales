@@ -11,7 +11,12 @@ const app = express()
 app.use(morgan('combine'))
 app.use(bodyParser.json())
 
-app.use(cors())
+var corsOptions = {
+  origin: '*',
+  methods: ["GET", "PUT", "POST", "DELETE", "HEAD", "OPTIONS", "PATCH"] // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.use(cors(corsOptions))
 
 /*
 //////
